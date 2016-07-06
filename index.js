@@ -171,22 +171,23 @@ const bbq = (config) => (client, server) => {
     };
 
     const styleLoaderName = config.styleLoaderName || 'style-loader';
+    const cssLoaderName = 'css-loader-bbq';
     const csslocals =
-      'css-loader/locals?modules&localIdentName=[name]__[local]___[hash:base64:5]';
+       `${cssLoaderName}/locals?modules&localIdentName=[name]__[local]___[hash:base64:5]&cssText`;
     const externalCssLoader = {
       test: /\.css$/,
       include: /\/node_modules\//,
       loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, 'css-loader').split('!') :
-        [csslocals],
+        ExtractTextPlugin.extract(styleLoaderName, cssLoaderName).split('!') :
+        [],
     };
     const globalCssRe = /\.global\.css$/;
     const globalCssLoader = {
       test: globalCssRe,
       include: `${config.basedir}/src/`,
       loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, ['css-loader', 'postcss-loader']).split('!') :
-        [csslocals, 'postcss-loader'],
+        ExtractTextPlugin.extract(styleLoaderName, [cssLoaderName, 'postcss-loader']).split('!') :
+        [],
     };
     const styleLoader = {
       test: /\.css$/,
@@ -194,7 +195,7 @@ const bbq = (config) => (client, server) => {
       exclude: (filepath) => globalCssRe.test(path.basename(filepath)),
       loaders: target === 'web' ? [
         styleLoaderName,
-        'css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]',
+        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]`,
         'postcss-loader',
       ] : [
         csslocals,
