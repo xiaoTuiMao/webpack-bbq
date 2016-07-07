@@ -179,7 +179,7 @@ const bbq = (config) => (client, server) => {
       include: /\/node_modules\//,
       loaders: target === 'web' ?
         ExtractTextPlugin.extract(styleLoaderName, cssLoaderName).split('!') :
-        [],
+        [csslocals],
     };
     const globalCssRe = /\.global\.css$/;
     const globalCssLoader = {
@@ -187,7 +187,7 @@ const bbq = (config) => (client, server) => {
       include: `${config.basedir}/src/`,
       loaders: target === 'web' ?
         ExtractTextPlugin.extract(styleLoaderName, [cssLoaderName, 'postcss-loader']).split('!') :
-        [],
+        [csslocals, 'postcss-loader'],
     };
     const styleLoader = {
       test: /\.css$/,
