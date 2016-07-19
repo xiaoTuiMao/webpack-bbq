@@ -1,0 +1,28 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "es3ify": "^0.2.2",
+    "rimraf": "^2.5.3",
+    "transform-loader": "^0.2.3",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.6.0",
+    "react-router-redux": "^4.0.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
+  }
+}

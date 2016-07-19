@@ -1,51 +1,27 @@
 'use strict';
 
-var _WebIndexRoute = require('./WebIndexRoute');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var _WebIndexRoute2 = _interopRequireDefault(_WebIndexRoute);
+var _Index = require('./Index');
 
-var _WebContainer = require('./WebContainer');
+var _Index2 = _interopRequireDefault(_Index);
 
-var _WebContainer2 = _interopRequireDefault(_WebContainer);
+var _Example = require('./Example');
 
-var _config = require('../config');
+var _Example2 = _interopRequireDefault(_Example);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var routes = [{
-  path: _config.rootdir + 'web.html',
-  indexRoute: { component: _WebIndexRoute2.default },
-  component: _WebContainer2.default
-}, {
-  path: _config.rootdir + 'web',
-  indexRoute: { component: _WebIndexRoute2.default },
-  component: _WebContainer2.default,
-  getChildRoutes: function getChildRoutes(location, callback) {
-    callback(null, require('./peanut.routes'));
-  }
-}, {
-  path: _config.rootdir + 'm.html',
-  component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default }
-}, {
-  path: _config.rootdir + 'm',
-  component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default },
-  getChildRoutes: function getChildRoutes(location, callback) {
-    callback(null, require('./peanut.routes'));
-  }
-}, {
-  path: _config.rootdir + 'hare.html',
-  component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default }
-}, {
-  path: _config.rootdir + 'hare',
-  component: _WebContainer2.default,
-  indexRoute: { component: _WebIndexRoute2.default },
-  getChildRoutes: function getChildRoutes(location, callback) {
-    callback(null, require('./peanut.routes'));
-  }
-}]; /* eslint global-require:0 */
+var index = {
+  path: '/',
+  components: _Index2.default,
+  childRoutes: [{
+    path: 'example.html',
+    components: _Example2.default
+  }]
+};
 
-
-module.exports = routes;
+exports.default = [index];
+module.exports = exports['default'];
