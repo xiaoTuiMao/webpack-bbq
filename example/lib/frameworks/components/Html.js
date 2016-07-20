@@ -14,6 +14,9 @@ var _appRevisions2 = _interopRequireDefault(_appRevisions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* eslint react/prop-types:0 */
+
+
 var Html = function Html(_ref) {
   var store = _ref.store;
   var cssText = _ref.cssText;

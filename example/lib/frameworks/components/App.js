@@ -20,6 +20,9 @@ var _RouterContext2 = _interopRequireDefault(_RouterContext);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* eslint react/prop-types:0 */
+
+
 var isServer = typeof window === 'undefined';
 var RouterContainer = isServer ? _RouterContext2.default : _Router2.default;
 
