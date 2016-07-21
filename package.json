@@ -1,6 +1,6 @@
 {
   "name": "webpack-bbq",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "webpack your bbq",
   "main": "index.js",
   "scripts": {
