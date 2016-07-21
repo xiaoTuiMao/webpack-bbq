@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createStaticRendering = require('./createStaticRendering');
+var _staticRendering = require('./frameworks/staticRendering');
 
-var _createStaticRendering2 = _interopRequireDefault(_createStaticRendering);
+var _staticRendering2 = _interopRequireDefault(_staticRendering);
 
 var _reducer = require('./reducer');
 
@@ -20,5 +20,5 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var appName = 'client';
 
-exports.default = (0, _createStaticRendering2.default)({ appName: appName, routes: _routes2.default, reducer: _reducer2.default });
+exports.default = (0, _staticRendering2.default)({ appName: appName, routes: _routes2.default, reducer: _reducer2.default });
 module.exports = exports['default'];

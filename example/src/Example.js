@@ -17,7 +17,7 @@ class Example extends Component {
   }
 }
 
-Example.getInitialCssText = () => styles.__cssText__;
+Example.getInitialCssText = () => styles.toString();
 
 export default Example;
 

@@ -51,7 +51,7 @@ var Index = function (_Component) {
 }(_react.Component);
 
 Index.getInitialCssText = function () {
-  return _index2.default.__cssText__;
+  return _index2.default.toString();
 };
 
 exports.default = Index;

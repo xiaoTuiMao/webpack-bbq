@@ -17,8 +17,11 @@ const statsOptions = {
   colors: { level: 1, hasBasic: true, has256: false, has16m: false },
 };
 const onStats = (err, stats) => {
-  if (err) console.error(err);
-  else console.info(stats.toString(statsOptions));
+  if (err) {
+    console.error(err.stack || err.toString());
+  } else {
+    console.info(stats.toString(statsOptions));
+  }
 };
 
 const compiler = webpack(webpackConfig[0]);

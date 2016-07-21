@@ -56,7 +56,7 @@ var Example = function (_Component) {
 }(_react.Component);
 
 Example.getInitialCssText = function () {
-  return _client2.default.__cssText__;
+  return _client2.default.toString();
 };
 
 exports.default = Example;

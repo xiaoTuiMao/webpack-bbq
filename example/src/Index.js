@@ -16,6 +16,6 @@ class Index extends Component {
   }
 }
 
-Index.getInitialCssText = () => styles.__cssText__;
+Index.getInitialCssText = () => styles.toString();
 
 export default Index;

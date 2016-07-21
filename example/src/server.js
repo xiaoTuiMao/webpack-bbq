@@ -1,4 +1,4 @@
-import staticRendering from './staticRendering';
+import staticRendering from './frameworks/staticRendering';
 
 import reducer from './reducer';
 import routes from './routes';
