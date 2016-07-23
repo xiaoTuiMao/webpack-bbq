@@ -279,7 +279,11 @@ const bbq = (config) => (client, server) => {
 
   // configuration - plugins
   // server only
-  const serverPlugins = [new ShouldNotEmit(), new NamedStats()];
+  const serverPlugins = [
+    new ShouldNotEmit(),
+    new NamedStats(),
+    new webpack.IgnorePlugin(/webpack\.config/),
+  ];
   if (server.staticRendering && Array.isArray(server.staticRendering)) {
     serverPlugins.push(new StaticRendering(config, server));
   }

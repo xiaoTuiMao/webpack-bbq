@@ -47,6 +47,7 @@ var Example = function (_Component) {
           { className: _client2.default.red },
           'Example'
         ),
+        _react2.default.createElement('div', { className: _client2.default.img }),
         children
       );
     }

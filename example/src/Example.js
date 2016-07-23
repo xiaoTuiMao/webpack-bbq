@@ -11,6 +11,7 @@ class Example extends Component {
     return (
       <div>
         <span className={styles.red}>Example</span>
+        <div className={styles.img}></div>
         {children}
       </div>
     );

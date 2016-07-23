@@ -1,3 +1,11 @@
 .red {
+  de
   color: red;
+}
+
+.img {
+  min-width: 300px;
+  min-height: 200px;
+  background-image: url('./latency-and-bandwidth.svg');
+  background-repeat: no-repeat;
 }

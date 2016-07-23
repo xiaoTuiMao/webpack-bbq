@@ -43,6 +43,6 @@ export default function createStaticRender({ appName, routes, reducer }) {
       const html = ReactDOMServer.renderToStaticMarkup(rootEl);
       callback(err, `<!doctype html>${html}`);
     });
-  }
+  };
 }
 
