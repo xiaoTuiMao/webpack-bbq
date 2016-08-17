@@ -147,7 +147,7 @@ const bbq = (config) => (client, server) => {
     };
     const fontLoader = {
       test: /\.(woff|ttf|woff2|eot)/,
-      loader: 'file-loader',
+      loader: `file-loader?name=${bundlename}`,
     };
     const imagesLoader = {
       test: /\.(png|jpg|ico)$/,
