@@ -1,4 +1,5 @@
 /* eslint react/prop-types:0 */
+/* eslint react/no-danger:0 */
 import React from 'react';
 
 import revisions from '../../../app-revisions.json';
@@ -8,14 +9,14 @@ const Html = ({ store, cssText, appHtml }) => {
   const { appName } = state;
   const initialState = JSON.stringify(state);
   return (
-    <html>
+    <html lang="zh">
       <head>
         <style dangerouslySetInnerHTML={{ __html: cssText }} />
       </head>
       <body>
-        <div id={appName} dangerouslySetInnerHTML={{ __html: appHtml }}></div>
+        <div id={appName} dangerouslySetInnerHTML={{ __html: appHtml }} />
         <script dangerouslySetInnerHTML={{ __html: `window.initialState = ${initialState};` }} />
-        <script src={revisions[`${appName}.js`]}></script>
+        <script src={revisions[`${appName}.js`]} />
       </body>
     </html>
   );

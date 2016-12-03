@@ -14,6 +14,10 @@ var _client = require('./client.css');
 
 var _client2 = _interopRequireDefault(_client);
 
+var _bbq = require('./bbq.jpg');
+
+var _bbq2 = _interopRequireDefault(_bbq);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24,6 +28,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /* eslint react/prefer-stateless-function:0 */
 /* eslint react/prop-types:0 */
 
+// https://commons.wikimedia.org/wiki/File:Bbq.jpg
+
 
 var Example = function (_Component) {
   _inherits(Example, _Component);
@@ -31,7 +37,7 @@ var Example = function (_Component) {
   function Example() {
     _classCallCheck(this, Example);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Example).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Example.__proto__ || Object.getPrototypeOf(Example)).apply(this, arguments));
   }
 
   _createClass(Example, [{
@@ -45,9 +51,13 @@ var Example = function (_Component) {
         _react2.default.createElement(
           'span',
           { className: _client2.default.red },
-          'Example'
+          '<Example />'
         ),
-        _react2.default.createElement('div', { className: _client2.default.img }),
+        _react2.default.createElement(
+          'div',
+          { className: _client2.default.img },
+          _react2.default.createElement('img', { src: _bbq2.default, alt: 'bbq' })
+        ),
         children
       );
     }

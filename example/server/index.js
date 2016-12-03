@@ -1,5 +1,8 @@
 /* eslint global-require:0, prefer-arrow-callback:0 */
+/* eslint object-property-newline:0 */
+
 'use strict';
+
 const rimraf = require('rimraf');
 const WebpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');

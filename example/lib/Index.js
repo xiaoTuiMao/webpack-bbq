@@ -30,7 +30,7 @@ var Index = function (_Component) {
   function Index() {
     _classCallCheck(this, Index);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Index).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).apply(this, arguments));
   }
 
   _createClass(Index, [{
@@ -41,7 +41,7 @@ var Index = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: _index2.default.index },
-        'Index',
+        '<Index />',
         children
       );
     }

@@ -1,5 +1,7 @@
 /* eslint no-use-before-define:0 */
+
 'use strict';
+
 const qs = require('querystring');
 const path = require('path');
 
@@ -11,7 +13,10 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const clearRequireCache = require('clear-require-cache');
+const autoprefixer = require('autoprefixer');
+
 const libify = require.resolve('webpack-libify');
+
 
 /**
  * config.basedir
@@ -22,7 +27,7 @@ const libify = require.resolve('webpack-libify');
  * client
  * server
  */
-const bbq = (config) => (client, server) => {
+const bbq = config => (client, server) => {
   client = defined(client, {});
   server = defined(server, {});
 
@@ -41,6 +46,7 @@ const bbq = (config) => (client, server) => {
   client.context = context;
   server.context = context;
 
+
   const getEntry = (id) => {
     const filepath = resolve.sync(id, { basedir: config.basedir });
     const appName = expose(filepath, `${config.basedir}/src/`);
@@ -48,7 +54,6 @@ const bbq = (config) => (client, server) => {
   };
 
   // 主文件 (entry)
-  // 通过 ${basedir}/src/ 获取主文件，index.js ？是否会有其他的可能？
   // configuration - entry
   // shared
   if (client.entry) {
@@ -70,6 +75,7 @@ const bbq = (config) => (client, server) => {
     throw new Error('server MUST HAVE one entry at most');
   }
 
+
   // 开发环境
   const debug = process.env.NODE_ENV === 'development';
 
@@ -77,6 +83,12 @@ const bbq = (config) => (client, server) => {
   // shared
   client.debug = defined(client.debug, debug);
   server.debug = defined(server.debug, debug);
+
+
+  // configuration - bail
+  // shared
+  client.bail = defined(client.bail, !client.debug);
+  server.bail = defined(server.bail, !server.debug);
 
   // 文件名需要有 .bundle
   // 文件名在开发环境中没有 chunkhash, contenthash, hash
@@ -89,7 +101,7 @@ const bbq = (config) => (client, server) => {
     filename = '[name].bundle.js';
     cssfilename = '[name].bundle.css';
     bundlename = '[path][name].[ext]';
-    devtool = 'inline-source-map';
+    devtool = 'eval';
   } else {
     filename = '[name]-[chunkhash].bundle.js';
     cssfilename = '[name]-[contenthash].bundle.css';
@@ -97,9 +109,11 @@ const bbq = (config) => (client, server) => {
     devtool = 'source-map';
   }
 
+
   // configuration - devtool
   // client only
   client.devtool = defined(client.devtool, devtool);
+
 
   // plugins
   const plugins = [
@@ -117,8 +131,8 @@ const bbq = (config) => (client, server) => {
   ];
 
   if (process.env.NODE_ENV === 'production') {
-    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
+    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
@@ -131,46 +145,53 @@ const bbq = (config) => (client, server) => {
   // 将已有的 plugins 添加到 bbq 设定的后面？
   client.plugins = plugins.concat(client.plugins).filter(v => v);
 
+
   const node = { __filename: true, __dirname: true };
 
   // configuration - node
   // client only
   client.node = xtend(node, client.node);
 
+
   // get loaders for specified target
   // supported targets: web, node
   const getLoaders = (target) => {
-    const urlLoader = `url-loader?name=${bundlename}`;
-    const svgLoader = {
-      test: /\.(svg)/,
-      loader: `${urlLoader}&limit=10000&mimetype=image/svg_xml`,
-    };
     const fontLoader = {
-      test: /\.(woff|ttf|woff2|eot)/,
+      test: /\.(woff|ttf|woff2|eot)(\?.*)?$/,
       loader: `file-loader?name=${bundlename}`,
     };
     const imagesLoader = {
-      test: /\.(png|jpg|ico)$/,
-      loader: `${urlLoader}&limit=25000`,
+      test: /\.(ico|jpg|jpeg|png|gif|webp|svg)(\?.*)?$/,
+      loader: `file-loader?name=${bundlename}`,
+    };
+    const avLoader = {
+      test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+      loader: `url-loader?name=${bundlename}&limit=10000`,
     };
 
     let babelquery = {
       'presets[]': ['react', 'es2015'],
-      'plugins[]': ['transform-object-rest-spread', 'add-module-exports'],
+      'plugins[]': [
+        'transform-object-rest-spread',
+        'add-module-exports',
+        'transform-class-properties',
+      ],
+      cacheDirectory: true,
+      babelrc: false,
     };
     if (target === 'node') {
       babelquery['plugins[]'].push('transform-ensure-ignore');
     }
     babelquery = qs.stringify(babelquery, null, null, {
-      encodeURIComponent: (s) => (s),
+      encodeURIComponent: s => (s),
     });
     const jsLoader = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loaders: [`babel-loader?${babelquery}`],
+      loaders: [`babel-loader?${babelquery}`, 'eslint-loader'],
     };
 
-    const styleLoaderName = config.styleLoaderName || 'style-loader';
+    const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
     const csslocals =
        `${cssLoaderName}/locals?modules&localIdentName=[name]__[local]___[hash:base64:5]&cssText`;
@@ -186,19 +207,19 @@ const bbq = (config) => (client, server) => {
       test: globalCssRe,
       include: `${config.basedir}/src/`,
       loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, [cssLoaderName, 'postcss-loader']).split('!') :
-        [csslocals, 'postcss-loader'],
+        ExtractTextPlugin.extract(styleLoaderName, [`${cssLoaderName}?importLoaders=1`, 'postcss-loader']).split('!') :
+        [`${csslocals}&importLoaders=1`, 'postcss-loader'],
     };
     const styleLoader = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
-      exclude: (filepath) => globalCssRe.test(path.basename(filepath)),
+      exclude: filepath => globalCssRe.test(path.basename(filepath)),
       loaders: target === 'web' ? [
         styleLoaderName,
-        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]`,
+        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=1`,
         'postcss-loader',
       ] : [
-        csslocals,
+        `${csslocals}&importLoaders=1`,
         'postcss-loader',
       ],
     };
@@ -208,25 +229,22 @@ const bbq = (config) => (client, server) => {
       loader: 'json-loader',
     };
 
-    const loaders = [
+    return [
       jsonLoader,
       jsLoader,
       externalCssLoader,
       globalCssLoader,
       styleLoader,
-      svgLoader,
       fontLoader,
       imagesLoader,
+      avLoader,
     ];
-    return loaders;
   };
 
   // configuration - module
   // client only
   client.module = xtend(client.module, {
-    loaders: getLoaders('web').concat(
-      client.module && client.module.loaders
-    ).filter(v => v),
+    loaders: getLoaders('web').concat(client.module && client.module.loaders).filter(v => v),
   });
 
   const exposeEntryLoaders = Object
@@ -241,11 +259,27 @@ const bbq = (config) => (client, server) => {
     client.module.postLoaders = exposeEntryLoaders;
   }
 
+
+  // postcss
+  const defaultPostcssPlugins = () => [
+    autoprefixer({
+      browsers: [
+        '>1%',
+        'last 4 versions',
+        'not ie < 8',
+      ],
+    }),
+  ];
+  client.postcss = defined(client.postcss, defaultPostcssPlugins);
+  server.postcss = defined(server.postcss, defaultPostcssPlugins);
+
+
   // output
   const output = xtend(client.output, {
     filename,
     chunkFilename: filename,
     path: config.outputdir,
+    pathinfo: true,
     publicPath: defined(config.publicPath, config.rootdir),
   });
 
@@ -269,12 +303,8 @@ const bbq = (config) => (client, server) => {
   // configuration - module
   // server only
   server.module = xtend(server.module, {
-    loaders: getLoaders('node').concat(
-      server.module && server.module.loaders
-    ).filter(v => v),
-    postLoaders: [{ loader: libify }].concat(
-      server.module && server.module.postLoaders
-    ).filter(v => v),
+    loaders: getLoaders('node').concat(server.module && server.module.loaders).filter(v => v),
+    postLoaders: [{ loader: libify }].concat(server.module && server.module.postLoaders).filter(v => v), /* eslint max-len:0 */
   });
 
   // configuration - plugins
@@ -293,11 +323,12 @@ const bbq = (config) => (client, server) => {
     // configuration - recordsPath
     client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;
 
-    const hotDevServer = require.resolve('webpack/hot/dev-server');
-    Object
-    .keys(client.entry)
-    .forEach(key => {
-      client.entry[key] = [].concat(client.entry[key]).concat(hotDevServer);
+    // const hotDevServer = require.resolve('webpack/hot/dev-server');
+    // const devServerClient = require.resolve('webpack-dev-server/client');
+    const devServerClient = require.resolve('react-dev-utils/webpackHotDevClient');
+    Object.keys(client.entry).forEach((key) => {
+      client.entry[key] = [].concat(client.entry[key]).concat(devServerClient);
+       //  .concat(`${devServerClient}?/`, hotDevServer);
     });
 
     client.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -311,7 +342,7 @@ const bbq = (config) => (client, server) => {
 
 function ShouldNotEmit() {}
 ShouldNotEmit.prototype.apply =
-  (compiler) => compiler.plugin('should-emit', () => false);
+  compiler => compiler.plugin('should-emit', () => false);
 
 function NamedStats() {}
 function makeBold(useColors) {
@@ -336,9 +367,10 @@ function StaticRendering(config, server) {
   this.config = xtend({ rootdir: '/' }, config);
   this.server = server;
 }
-StaticRendering.prototype.get = function (srcfile) {
+
+StaticRendering.prototype.get = function (srcfile, basedir) {
   const ext = path.extname(srcfile);
-  let libfile = srcfile.replace('/src/', '/lib/');
+  let libfile = basedir + srcfile.slice(basedir.length).replace('/src/', '/lib/');
   if (ext === '' || (ext !== '.js' && ext !== '.json')) {
     libfile = `${libfile}.js`;
   }
@@ -346,7 +378,7 @@ StaticRendering.prototype.get = function (srcfile) {
 };
 StaticRendering.prototype.apply = function (compiler) {
   const config = this.config;
-  const entry = this.get(this.server.entry[Object.keys(this.server.entry)[0]]);
+  const entry = this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir);
   const staticRendering = this.server.staticRendering;
 
   compiler.plugin('after-compile', (compilation, callback) => {
@@ -354,7 +386,7 @@ StaticRendering.prototype.apply = function (compiler) {
       clearRequireCache(entry);
     }
     let app;
-    /* eslint global-require:0 */
+    /* eslint global-require:0, import/no-dynamic-require:0 */
     try { app = require(entry); } catch (err) { callback(err); return; }
     if (typeof app !== 'function') {
       callback(new Error('server.entry MUST BE a function'));
@@ -365,7 +397,7 @@ StaticRendering.prototype.apply = function (compiler) {
       return;
     }
 
-    map(staticRendering, (uri, cb) => {
+    const run = (uri, cb) => {
       const filepath = `${config.outputdir}${uri.slice(config.rootdir.length - 1)}`;
       compiler.outputFileSystem.mkdirp(path.dirname(filepath), (err) => {
         if (err) {
@@ -386,7 +418,9 @@ StaticRendering.prototype.apply = function (compiler) {
           compiler.outputFileSystem.writeFile(filepath, html, cb);
         });
       });
-    }, callback);
+    };
+
+    map(staticRendering, run, callback);
   });
 };
 
@@ -396,6 +430,4 @@ function expose(filename, basedir) {
   return path.join(path.dirname(relname), path.basename(relname, extname));
 }
 
-bbq.NamedStats = NamedStats;
-bbq.ShouldNotEmit = ShouldNotEmit;
 module.exports = bbq;

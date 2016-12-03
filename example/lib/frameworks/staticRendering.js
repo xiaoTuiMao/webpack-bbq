@@ -42,9 +42,9 @@ function cleanCSS(source) {
 }
 
 function createStaticRender(_ref) {
-  var appName = _ref.appName;
-  var routes = _ref.routes;
-  var reducer = _ref.reducer;
+  var appName = _ref.appName,
+      routes = _ref.routes,
+      reducer = _ref.reducer;
 
   return function staticRender(url, callback) {
     var store = (0, _redux.createStore)(reducer, {

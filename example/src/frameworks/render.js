@@ -1,3 +1,4 @@
+/* eslint no-undef:0 */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
@@ -11,5 +12,5 @@ export default function render({ routes, reducer }) {
   const router = { routes, history: browserHistory };
   const el = document.getElementById(window.initialState.appName);
 
-  return ReactDOM.render(<App store={store} router={router} />, el);
+  ReactDOM.render(<App store={store} router={router} />, el);
 }

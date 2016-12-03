@@ -21,14 +21,12 @@ var _RouterContext2 = _interopRequireDefault(_RouterContext);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint react/prop-types:0 */
-
-
 var isServer = typeof window === 'undefined';
 var RouterContainer = isServer ? _RouterContext2.default : _Router2.default;
 
 var App = function App(_ref) {
-  var store = _ref.store;
-  var router = _ref.router;
+  var store = _ref.store,
+      router = _ref.router;
   return _react2.default.createElement(
     _reactRedux.Provider,
     { store: store },
