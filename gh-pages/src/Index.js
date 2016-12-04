@@ -9,7 +9,6 @@ class Index extends Component {
     const { children } = this.props;
     return (
       <div className={styles.index}>
-        {'<Index />'}
         {children}
       </div>
     );

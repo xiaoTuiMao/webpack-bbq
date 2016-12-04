@@ -49,11 +49,6 @@ var Example = function (_Component) {
         'div',
         null,
         _react2.default.createElement(
-          'span',
-          { className: _client2.default.red },
-          '<Example />'
-        ),
-        _react2.default.createElement(
           'div',
           { className: _client2.default.img },
           _react2.default.createElement('img', { src: _bbq2.default, alt: 'bbq' })

@@ -41,7 +41,6 @@ var Index = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: _index2.default.index },
-        '<Index />',
         children
       );
     }

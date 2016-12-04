@@ -12,7 +12,6 @@ class Example extends Component {
     const { children } = this.props;
     return (
       <div>
-        <span className={styles.red}>{'<Example />'}</span>
         <div className={styles.img}>
           <img src={bbq} alt="bbq" />
         </div>
