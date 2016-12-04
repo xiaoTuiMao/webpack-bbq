@@ -1,0 +1,7 @@
+gh-pages
+docs
+.eslintrc
+.eslintignore
+*.tgz
+.npmignore
+test
