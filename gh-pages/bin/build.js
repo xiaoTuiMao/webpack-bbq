@@ -1,8 +1,5 @@
 /* eslint no-var:0, vars-on-top:0, func-names:0, no-console:0 */
 /* eslint object-property-newline:0 */
-if (process.env.NODE_ENV === undefined) {
-  process.env.NODE_ENV = 'development';
-}
 const webpack = require('webpack');
 const rimraf = require('rimraf');
 

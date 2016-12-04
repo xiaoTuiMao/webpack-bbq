@@ -1,12 +1,12 @@
-/* eslint object-shorthand:0, prefer-template:0 */
+/* eslint object-shorthand:0, prefer-template:0, no-var:0 */
+
 'use strict';
-if (process.env.NODE_ENV === undefined) {
-  process.env.NODE_ENV = 'development';
-}
+
 const path = require('path');
+
 const basedir = __dirname;
-const rootdir = '/';
-let publicPath = rootdir;
+const rootdir = '/webpack-bbq/';
+var publicPath = rootdir;
 if (process.env.NODE_ENV === 'production') {
   publicPath = 'http://wenbing.github.io/webpack-bbq/';
 }
