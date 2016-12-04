@@ -1,4 +1,4 @@
-!function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return e[r].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var n={};return t.m=e,t.c=n,t.p="/",t(0)}(function(e){for(var t in e)if(Object.prototype.hasOwnProperty.call(e,t))switch(typeof e[t]){case"function":break;case"object":e[t]=function(t){var n=t.slice(1),r=e[t[0]];return function(e,t,o){r.apply(this,[e,t,o].concat(n))}}(e[t]);break;default:e[t]=e[e[t]]}return e}([/*!***********************!*\
+!function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={exports:{},id:r,loaded:!1};return e[r].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var n={};return t.m=e,t.c=n,t.p="http://wenbing.github.io/webpack-bbq/",t(0)}(function(e){for(var t in e)if(Object.prototype.hasOwnProperty.call(e,t))switch(typeof e[t]){case"function":break;case"object":e[t]=function(t){var n=t.slice(1),r=e[t[0]];return function(e,t,o){r.apply(this,[e,t,o].concat(n))}}(e[t]);break;default:e[t]=e[e[t]]}return e}([/*!***********************!*\
   !*** ./src/client.js ***!
   \***********************/
 function(e,t,n){(function(t){e.exports=t.client=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&cacheDirectory=true&babelrc=false!../~/eslint-loader!./src/client.js */230)}).call(t,function(){return this}())},/*!*********************************!*\
@@ -733,4 +733,4 @@ function(e,t,n){var r=n(/*! !./../../~/css-loader-bbq?modules&localIdentName=[na
   !*** ./src/index.css ***!
   \***********************/
 function(e,t,n){var r=n(/*! !./../../~/css-loader-bbq?modules&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=1!./../../~/postcss-loader!./index.css */236);"string"==typeof r&&(r=[[e.id,r,""]]);n(/*! ./../../~/style-loader/addStyles.js */110)(r,{});r.locals&&(e.exports=r.locals)}]));
-//# sourceMappingURL=client-675ed68f95115fdfe69d.bundle.js.map
+//# sourceMappingURL=client-a3290800cdeb8fd3feca.bundle.js.map
