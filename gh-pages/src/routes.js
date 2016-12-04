@@ -6,7 +6,7 @@ const index = {
   components: Index,
   childRoutes: [
     {
-      path: 'example.html',
+      path: 'index.html',
       components: Example,
     },
   ],

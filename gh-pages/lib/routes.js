@@ -18,7 +18,7 @@ var index = {
   path: '/',
   components: _Index2.default,
   childRoutes: [{
-    path: 'example.html',
+    path: 'index.html',
     components: _Example2.default
   }]
 };

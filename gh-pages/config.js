@@ -2,12 +2,13 @@
 if (process.env.NODE_ENV === undefined) {
   process.env.NODE_ENV = 'development';
 }
+const path = require('path');
 const basedir = __dirname;
 const rootdir = '/';
 
 module.exports = {
   basedir: basedir,
-  outputdir: basedir + '/public',
+  outputdir: path.resolve(basedir, '../docs'),
   rootdir: rootdir,
   publicPath: rootdir,
 };

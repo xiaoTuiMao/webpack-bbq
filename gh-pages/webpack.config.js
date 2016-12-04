@@ -9,7 +9,7 @@ module.exports = bbq(config)({
 }, {
   entry: require.resolve('./src/server'),
   staticRendering: [
-    `${config.rootdir}example.html`,
+    `${config.rootdir}index.html`,
   ],
 });
 

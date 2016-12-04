@@ -1,0 +1,1 @@
+module.exports = require("../webpack.config")[0].output.publicPath + "src/bbq-dcb179fd926ad67e97ef7f62e3ba9108.jpg";
