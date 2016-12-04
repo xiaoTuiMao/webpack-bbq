@@ -131,12 +131,13 @@ const bbq = config => (client, server) => {
   ];
 
   if (process.env.NODE_ENV === 'production') {
+    const screw_ie8 = defined(client.screw_ie8, false); /* eslint camelcase:0 */
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
     plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
+      mangle: { screw_ie8 },
+      compress: { warnings: false, screw_ie8 },
+      output: { screw_ie8 },
     }));
   }
 
