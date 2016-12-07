@@ -189,8 +189,11 @@ const bbq = config => (client, server) => {
     const jsLoader = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loaders: [`babel-loader?${babelquery}`, 'eslint-loader'],
+      loaders: [`babel-loader?${babelquery}`],
     };
+    if (client.debug) {
+      jsLoader.loaders.push('eslint-loader');
+    }
 
     const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
