@@ -23,6 +23,7 @@ const libify = require.resolve('webpack-libify');
  * config.outputdir
  * config.rootdir
  * config.publicPath
+ * config.cssLoaderHashPrefix
  *
  * client
  * server
@@ -191,7 +192,10 @@ const bbq = config => (client, server) => {
       include: `${config.basedir}/src/`,
       loaders: [`babel-loader?${babelquery}`],
     };
-    if (client.debug) {
+    /**
+     * 关心 src
+     */
+    if (client.debug && target === 'web') {
       jsLoader.loaders.push('eslint-loader');
     }
 
@@ -214,16 +218,17 @@ const bbq = config => (client, server) => {
         ExtractTextPlugin.extract(styleLoaderName, [`${cssLoaderName}?importLoaders=1`, 'postcss-loader']).split('!') :
         [`${csslocals}&importLoaders=1`, 'postcss-loader'],
     };
+    const hashPrefix = config.cssLoaderHashPrefix || '';
     const styleLoader = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
       exclude: filepath => globalCssRe.test(path.basename(filepath)),
       loaders: target === 'web' ? [
         styleLoaderName,
-        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]&importLoaders=1`,
+        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=${hashPrefix}&importLoaders=1`,
         'postcss-loader',
       ] : [
-        `${csslocals}&importLoaders=1`,
+        `${csslocals}&hashPrefix=${hashPrefix}&importLoaders=1`,
         'postcss-loader',
       ],
     };
@@ -234,8 +239,8 @@ const bbq = config => (client, server) => {
     };
 
     return [
-      jsonLoader,
       jsLoader,
+      jsonLoader,
       externalCssLoader,
       globalCssLoader,
       styleLoader,
@@ -250,6 +255,13 @@ const bbq = config => (client, server) => {
   client.module = xtend(client.module, {
     loaders: getLoaders('web').concat(client.module && client.module.loaders).filter(v => v),
   });
+
+  // configuration - eslint
+  // client only
+  client.eslint = xtend({
+    fix: true,
+    quiet: true,
+  }, client.eslint);
 
   const exposeEntryLoaders = Object
   .keys(client.entry)
