@@ -136,7 +136,7 @@ const bbq = config => (client, server) => {
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
     plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new webpack.optimize.UglifyJsPlugin({
-      mangle: false, // { screw_ie8 },
+      mangle: { screw_ie8 },
       compress: { warnings: false, screw_ie8 },
       output: { screw_ie8 },
     }));
