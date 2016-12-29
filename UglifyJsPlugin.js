@@ -83,12 +83,14 @@ UglifyJsPlugin.prototype.apply = function(compiler) {
 						filename: file
 					});
 					if(options.compress !== false) {
-						ast.figure_out_scope(options.compress);
+            var copts = { screw_ie8: options.compress.screw_ie8 };
+						ast.figure_out_scope(copts);
 						var compress = uglify.Compressor(options.compress); // eslint-disable-line new-cap
 						ast = ast.transform(compress);
 					}
 					if(options.mangle !== false) {
-						ast.figure_out_scope(options.mangle || {});
+            var mopts = { screw_ie8: options.mangle.screw_ie8 };
+						ast.figure_out_scope(mopts);
 						ast.compute_char_frequency(options.mangle || {});
 						ast.mangle_names(options.mangle || {});
 						if(options.mangle && options.mangle.props) {

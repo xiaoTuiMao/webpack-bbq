@@ -72,7 +72,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "warning": "^2.1.0",
-    "webpack": "^1.13.3",
+    "webpack": "^1.14",
     "webpack-bbq-manifest-generator": "^1.0.3",
     "webpack-core": "0.6.9",
     "webpack-dev-server": "^1.16.2",
