@@ -5,8 +5,8 @@
 var SourceMapConsumer = require("webpack-core/lib/source-map").SourceMapConsumer;
 var SourceMapSource = require("webpack-core/lib/SourceMapSource");
 var RawSource = require("webpack-core/lib/RawSource");
-var RequestShortener = require("../RequestShortener");
-var ModuleFilenameHelpers = require("../ModuleFilenameHelpers");
+var RequestShortener = require("webpack/lib/RequestShortener");
+var ModuleFilenameHelpers = require("webpack/lib/ModuleFilenameHelpers");
 var uglify = require("uglify-js");
 
 function UglifyJsPlugin(options) {

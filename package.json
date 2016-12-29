@@ -43,6 +43,9 @@
     "tape": "^4.5.1",
     "xhr-request": "^1.0.1"
   },
+  "peerDependencies": {
+    "uglify-js": "~2.7.3"
+  },
   "dependencies": {
     "autoprefixer": "^6.5.3",
     "babel-core": "^6.17.0",
