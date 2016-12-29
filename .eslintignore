@@ -1,3 +1,4 @@
 lib/
 public/
 node_modules/
+UglifyJsPlugin.js

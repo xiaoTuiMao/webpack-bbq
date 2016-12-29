@@ -15,6 +15,8 @@ const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
+const UglifyJsPlugin = require('./UglifyJsPlugin');
+
 const libify = require.resolve('webpack-libify');
 
 
@@ -135,7 +137,7 @@ const bbq = config => (client, server) => {
     const screw_ie8 = defined(client.screw_ie8, false); /* eslint camelcase:0 */
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
     plugins.push(new webpack.optimize.DedupePlugin());
-    plugins.push(new webpack.optimize.UglifyJsPlugin({
+    plugins.push(new UglifyJsPlugin({
       mangle: { screw_ie8 },
       compress: { warnings: false, screw_ie8 },
       output: { screw_ie8 },
@@ -192,12 +194,6 @@ const bbq = config => (client, server) => {
       include: `${config.basedir}/src/`,
       loaders: [`babel-loader?${babelquery}`],
     };
-    /**
-     * 关心 src
-     */
-    if (client.debug && target === 'web') {
-      jsLoader.loaders.push('eslint-loader');
-    }
 
     const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
@@ -255,13 +251,6 @@ const bbq = config => (client, server) => {
   client.module = xtend(client.module, {
     loaders: getLoaders('web').concat(client.module && client.module.loaders).filter(v => v),
   });
-
-  // configuration - eslint
-  // client only
-  client.eslint = xtend({
-    fix: true,
-    quiet: true,
-  }, client.eslint);
 
   const exposeEntryLoaders = Object
   .keys(client.entry)
