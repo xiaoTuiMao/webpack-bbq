@@ -179,6 +179,7 @@ const bbq = config => (client, server) => {
         'transform-object-rest-spread',
         'add-module-exports',
         'transform-class-properties',
+        'transform-async-to-generator',
       ],
       cacheDirectory: true,
       babelrc: false,
