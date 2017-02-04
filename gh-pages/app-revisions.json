@@ -1,4 +1,6 @@
 {
-  "client.js": "client.bundle.js",
-  "client.css": "client.bundle.css"
+  "client.js": "client-534f66d8adedf39a64ca.bundle.js",
+  "client.css": "client-7411b9041dad72eeed20b4bced355941.bundle.css",
+  "client.js.map": "client-534f66d8adedf39a64ca.bundle.js.map",
+  "client.css.map": "client-7411b9041dad72eeed20b4bced355941.bundle.css.map"
 }
