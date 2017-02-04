@@ -1,4 +1,3 @@
 {
-  "client.js": "client-6d32620f63808485c417.bundle.js",
-  "client.js.map": "client-6d32620f63808485c417.bundle.js.map"
+  "client.js": "client.bundle.js"
 }

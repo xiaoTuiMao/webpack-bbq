@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/wenbing/webpack-bbq#readme",
   "devDependencies": {
+    "clean-css": "4.0.4",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
@@ -44,6 +45,8 @@
     "xhr-request": "^1.0.1"
   },
   "peerDependencies": {
+    "webpack": "^1.14",
+    "webpack-dev-server": "^1.16.2",
     "uglify-js": "~2.7.3"
   },
   "dependencies": {

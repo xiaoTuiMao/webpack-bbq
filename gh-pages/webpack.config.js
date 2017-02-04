@@ -8,9 +8,12 @@ module.exports = bbq(config)({
   },
 }, {
   entry: require.resolve('./src/server'),
-  staticRendering: [
-    `${config.rootdir}index.html`,
-  ],
+  staticRendering: {
+    app: require.resolve('./server/renderToStaticMarkup'),
+    uris: [
+      `${config.rootdir}index.html`,
+    ],
+  },
 });
 
 if (require.main === module) {

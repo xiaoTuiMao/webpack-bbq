@@ -320,7 +320,7 @@ const bbq = config => (client, server) => {
     new NamedStats(),
     new webpack.IgnorePlugin(/webpack\.config/),
   ];
-  if (server.staticRendering && Array.isArray(server.staticRendering)) {
+  if (server.staticRendering) {
     serverPlugins.push(new StaticRendering(config, server));
   }
   server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
@@ -384,8 +384,21 @@ StaticRendering.prototype.get = function (srcfile, basedir) {
 };
 StaticRendering.prototype.apply = function (compiler) {
   const config = this.config;
-  const entry = this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir);
   const staticRendering = this.server.staticRendering;
+  let uris;
+  if (Array.isArray(staticRendering)) {
+    uris = staticRendering;
+  } else {
+    uris = staticRendering.uris;
+  }
+  console.info(uris)
+  if (!Array.isArray(uris)) {
+    throw new Error('uris must be an Array');
+  }
+  const entry = defined(
+    staticRendering.app,
+    this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir)
+  );
 
   compiler.plugin('after-compile', (compilation, callback) => {
     if (process.env.NODE_ENV === 'development') {
@@ -393,13 +406,18 @@ StaticRendering.prototype.apply = function (compiler) {
     }
     let app;
     /* eslint global-require:0, import/no-dynamic-require:0 */
-    try { app = require(entry); } catch (err) { callback(err); return; }
+    try {
+      app = require(resolve.sync(entry, { basedir: config.basedir }));
+    } catch (err) {
+      callback(err);
+      return;
+    }
     if (typeof app !== 'function') {
-      callback(new Error('server.entry MUST BE a function'));
+      callback(new Error('staticRendering.app MUST BE a function'));
       return;
     }
     if (app.length !== 2) {
-      callback(new Error('server.entry MUST BE (uri, cb) => cb(err, html)'));
+      callback(new Error('staticRendering.app MUST BE (uri, cb) => cb(err, html)'));
       return;
     }
 
@@ -426,7 +444,7 @@ StaticRendering.prototype.apply = function (compiler) {
       });
     };
 
-    map(staticRendering, run, callback);
+    map(uris, run, callback);
   });
 };
 
