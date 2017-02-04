@@ -6,10 +6,7 @@ const path = require('path');
 
 const basedir = __dirname;
 const rootdir = '/webpack-bbq/';
-var publicPath = rootdir;
-if (process.env.NODE_ENV === 'production') {
-  publicPath = 'http://wenbing.github.io/webpack-bbq/';
-}
+const publicPath = rootdir;
 
 module.exports = {
   basedir: basedir,

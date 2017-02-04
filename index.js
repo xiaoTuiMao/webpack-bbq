@@ -391,18 +391,16 @@ StaticRendering.prototype.apply = function (compiler) {
   } else {
     uris = staticRendering.uris;
   }
-  console.info(uris)
-  if (!Array.isArray(uris)) {
-    throw new Error('uris must be an Array');
-  }
-  const entry = defined(
-    staticRendering.app,
-    this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir)
-  );
+  /* eslint max-len:0 */
+  const entry = defined(staticRendering.app, this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir));
 
   compiler.plugin('after-compile', (compilation, callback) => {
     if (process.env.NODE_ENV === 'development') {
       clearRequireCache(entry);
+    }
+    if (!Array.isArray(uris)) {
+      callback(new Error('staticRendering.uris MUST BE an Array'));
+      return;
     }
     let app;
     /* eslint global-require:0, import/no-dynamic-require:0 */

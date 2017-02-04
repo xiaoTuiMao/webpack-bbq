@@ -8,14 +8,16 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _config = require('../../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
 var _appRevisions = require('../../../app-revisions.json');
 
 var _appRevisions2 = _interopRequireDefault(_appRevisions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint react/prop-types:0 */
-/* eslint react/no-danger:0 */
 var Html = function Html(_ref) {
   var store = _ref.store,
       cssText = _ref.cssText,
@@ -38,10 +40,10 @@ var Html = function Html(_ref) {
       null,
       _react2.default.createElement('div', { id: appName, dangerouslySetInnerHTML: { __html: appHtml } }),
       _react2.default.createElement('script', { dangerouslySetInnerHTML: { __html: 'window.initialState = ' + initialState + ';' } }),
-      _react2.default.createElement('script', { src: _appRevisions2.default[appName + '.js'] })
+      _react2.default.createElement('script', { src: '' + _config2.default.publicPath + _appRevisions2.default[appName + '.js'] })
     )
   );
-};
-
+}; /* eslint react/prop-types:0 */
+/* eslint react/no-danger:0 */
 exports.default = Html;
 module.exports = exports['default'];

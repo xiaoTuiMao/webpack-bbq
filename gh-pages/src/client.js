@@ -1,3 +1,5 @@
+import './client.global.css';
+
 import render from './frameworks/render';
 
 import reducer from './reducer';

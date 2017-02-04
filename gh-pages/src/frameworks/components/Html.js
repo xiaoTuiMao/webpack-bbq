@@ -2,6 +2,7 @@
 /* eslint react/no-danger:0 */
 import React from 'react';
 
+import config from '../../../config';
 import revisions from '../../../app-revisions.json';
 
 const Html = ({ store, cssText, appHtml }) => {
@@ -16,7 +17,7 @@ const Html = ({ store, cssText, appHtml }) => {
       <body>
         <div id={appName} dangerouslySetInnerHTML={{ __html: appHtml }} />
         <script dangerouslySetInnerHTML={{ __html: `window.initialState = ${initialState};` }} />
-        <script src={revisions[`${appName}.js`]} />
+        <script src={`${config.publicPath}${revisions[`${appName}.js`]}`} />
       </body>
     </html>
   );
