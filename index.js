@@ -198,14 +198,12 @@ const bbq = config => (client, server) => {
 
     const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
-    const csslocals =
-       `${cssLoaderName}/locals?modules&localIdentName=[name]__[local]___[hash:base64:5]&cssText`;
     const externalCssLoader = {
       test: /\.css$/,
       include: /\/node_modules\//,
       loaders: target === 'web' ?
         ExtractTextPlugin.extract(styleLoaderName, cssLoaderName).split('!') :
-        [csslocals],
+        [`${cssLoaderName}`],
     };
     const globalCssRe = /\.global\.css$/;
     const globalCssLoader = {
@@ -213,19 +211,20 @@ const bbq = config => (client, server) => {
       include: `${config.basedir}/src/`,
       loaders: target === 'web' ?
         ExtractTextPlugin.extract(styleLoaderName, [`${cssLoaderName}?importLoaders=1`, 'postcss-loader']).split('!') :
-        [`${csslocals}&importLoaders=1`, 'postcss-loader'],
+        [`${cssLoaderName}?importLoaders=1`, 'postcss-loader'],
     };
     const hashPrefix = config.cssLoaderHashPrefix || '';
+    const styleQuery = `modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=${hashPrefix}&importLoaders=1`;
     const styleLoader = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
       exclude: filepath => globalCssRe.test(path.basename(filepath)),
       loaders: target === 'web' ? [
         styleLoaderName,
-        `${cssLoaderName}?modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=${hashPrefix}&importLoaders=1`,
+        `${cssLoaderName}?${styleQuery}`,
         'postcss-loader',
       ] : [
-        `${csslocals}&hashPrefix=${hashPrefix}&importLoaders=1`,
+        `${cssLoaderName}/locals?${styleQuery}&cssText`,
         'postcss-loader',
       ],
     };
@@ -421,6 +420,7 @@ StaticRendering.prototype.apply = function (compiler) {
 
     const run = (uri, cb) => {
       const filepath = `${config.outputdir}${uri.slice(config.rootdir.length - 1)}`;
+      console.info(filepath)
       compiler.outputFileSystem.mkdirp(path.dirname(filepath), (err) => {
         if (err) {
           cb(err);
