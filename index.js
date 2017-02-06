@@ -420,7 +420,6 @@ StaticRendering.prototype.apply = function (compiler) {
 
     const run = (uri, cb) => {
       const filepath = `${config.outputdir}${uri.slice(config.rootdir.length - 1)}`;
-      console.info(filepath)
       compiler.outputFileSystem.mkdirp(path.dirname(filepath), (err) => {
         if (err) {
           cb(err);
