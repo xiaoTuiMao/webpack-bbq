@@ -1,8 +1,4 @@
 {
-  "client.js": "client-ad4ab333b9be3103525d.bundle.js",
-  "client.css": "client-278c01edbf283478390605df69f96146.bundle.css",
-  "client.js.map": "client-ad4ab333b9be3103525d.bundle.js.map",
-  "client.css.map": "client-278c01edbf283478390605df69f96146.bundle.css.map",
-  "bbq.js": "bbq-4fb257382812eeb8a2bd.bundle.js",
-  "bbq.js.map": "bbq-4fb257382812eeb8a2bd.bundle.js.map"
+  "client.js": "client-cbc7bea89d5d731f9434.bundle.js",
+  "client.css": "client-278c01edbf283478390605df69f96146.bundle.css"
 }

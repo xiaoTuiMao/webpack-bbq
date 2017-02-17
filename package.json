@@ -78,7 +78,7 @@
     "url-loader": "^0.5.7",
     "warning": "^3.0.0",
     "webpack": "^2.2.1",
-    "webpack-bbq-manifest-generator": "^1.0.3",
+    "webpack-bbq-manifest-generator": "^1.1.0",
     "webpack-dev-server": "^2.3.0",
     "webpack-libify": "^1.1.2",
     "webpack-sources": "^0.1.4",

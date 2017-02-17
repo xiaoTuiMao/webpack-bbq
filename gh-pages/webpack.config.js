@@ -13,7 +13,6 @@ module.exports = bbq(xtend(config, {
 }))({
   entry: {
     client: require.resolve('./src/client'),
-    bbq: require.resolve('./src/bbq'),
   },
 }, {
   entry: require.resolve('./src/server'),
