@@ -1,5 +1,4 @@
 const xtend = require('xtend');
-const webpack = require('webpack');
 const bbq = require('../');
 
 const config = require('./config');
