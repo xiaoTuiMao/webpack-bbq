@@ -1,0 +1,24 @@
+5,10c5,10
+< const SourceMapConsumer = require("source-map").SourceMapConsumer;
+< const SourceMapSource = require("webpack-sources").SourceMapSource;
+< const RawSource = require("webpack-sources").RawSource;
+< const RequestShortener = require("webpack/lib/RequestShortener");
+< const ModuleFilenameHelpers = require("webpack/lib/ModuleFilenameHelpers");
+< const uglify = require("uglify-js");
+---
+> var SourceMapConsumer = require("webpack-core/lib/source-map").SourceMapConsumer;
+> var SourceMapSource = require("webpack-core/lib/SourceMapSource");
+> var RawSource = require("webpack-core/lib/RawSource");
+> var RequestShortener = require("../RequestShortener");
+> var ModuleFilenameHelpers = require("../ModuleFilenameHelpers");
+> var uglify = require("uglify-js");
+86,87c86
+<             var copts = { screw_ie8: options.compress.screw_ie8 };
+< 						ast.figure_out_scope(copts);
+---
+> 						ast.figure_out_scope();
+92,93c91
+<             var mopts = { screw_ie8: options.mangle.screw_ie8 };
+< 						ast.figure_out_scope(mopts);
+---
+> 						ast.figure_out_scope();

@@ -14,7 +14,6 @@ const compiler = webpack(webpackConfig[0]);
 const devServer = new WebpackDevServer(compiler, {
   contentBase: config.outputdir,
   publicPath: config.publicPath,
-  staticPath: config.outputdir,
   stats: statsOptions,
   hot: true,
 });

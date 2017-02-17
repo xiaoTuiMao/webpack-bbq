@@ -18,6 +18,8 @@ const autoprefixer = require('autoprefixer');
 const UglifyJsPlugin = require('./UglifyJsPlugin');
 
 const libify = require.resolve('webpack-libify');
+// 开发环境
+const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 
 
 /**
@@ -25,7 +27,10 @@ const libify = require.resolve('webpack-libify');
  * config.outputdir
  * config.rootdir
  * config.publicPath
+ *
  * config.cssLoaderHashPrefix
+ * config.postcss
+ * config.staticRendering
  *
  * client
  * server
@@ -79,19 +84,10 @@ const bbq = config => (client, server) => {
   }
 
 
-  // 开发环境
-  const debug = process.env.NODE_ENV === 'development';
-
-  // configuration - debug
-  // shared
-  client.debug = defined(client.debug, debug);
-  server.debug = defined(server.debug, debug);
-
-
   // configuration - bail
   // shared
-  client.bail = defined(client.bail, !client.debug);
-  server.bail = defined(server.bail, !server.debug);
+  client.bail = defined(client.bail, !debug);
+  server.bail = defined(server.bail, !debug);
 
   // 文件名需要有 .bundle
   // 文件名在开发环境中没有 chunkhash, contenthash, hash
@@ -122,22 +118,16 @@ const bbq = config => (client, server) => {
   const plugins = [
     new NamedStats(),
     new ExtractTextPlugin(cssfilename),
-    new webpack.optimize.CommonsChunkPlugin({
-      filename,
-      children: true,
-      minChunks: defined(client.minChunks, 3),
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
     new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`),
   ];
 
-  if (process.env.NODE_ENV === 'production') {
+  if (!debug) {
     const screw_ie8 = defined(client.screw_ie8, false); /* eslint camelcase:0 */
-    plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
-    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new UglifyJsPlugin({
+      sourceMap: true,
       mangle: { screw_ie8 },
       compress: { warnings: false, screw_ie8 },
       output: { screw_ie8 },
@@ -193,25 +183,41 @@ const bbq = config => (client, server) => {
     const jsLoader = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loaders: [`babel-loader?${babelquery}`],
+      loader: `babel-loader?${babelquery}`,
     };
 
     const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
+    const defaultPostcssPlugins = () => [
+      autoprefixer({
+        browsers: [
+          '>1%',
+          'last 4 versions',
+          'not ie < 8',
+        ],
+      }),
+    ];
+    const postcssLoader = {
+      loader: 'postcss-loader',
+      options: { plugins: defined(config.postcss, defaultPostcssPlugins) },
+    };
     const externalCssLoader = {
       test: /\.css$/,
       include: /\/node_modules\//,
-      loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, cssLoaderName).split('!') :
-        [`${cssLoaderName}`],
+      use: target === 'web' ?
+      ExtractTextPlugin.extract({ fallback: styleLoaderName, use: cssLoaderName }) :
+      [`${cssLoaderName}`],
     };
     const globalCssRe = /\.global\.css$/;
     const globalCssLoader = {
       test: globalCssRe,
       include: `${config.basedir}/src/`,
-      loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, [`${cssLoaderName}?importLoaders=1`, 'postcss-loader']).split('!') :
-        [`${cssLoaderName}?importLoaders=1`, 'postcss-loader'],
+      use: target === 'web' ?
+        ExtractTextPlugin.extract({
+          fallback: styleLoaderName,
+          use: [`${cssLoaderName}?importLoaders=1`, postcssLoader],
+        }) :
+        [`${cssLoaderName}?importLoaders=1`, postcssLoader],
     };
     const hashPrefix = config.cssLoaderHashPrefix || '';
     const styleQuery = `modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=${hashPrefix}&importLoaders=1`;
@@ -219,13 +225,13 @@ const bbq = config => (client, server) => {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
       exclude: filepath => globalCssRe.test(path.basename(filepath)),
-      loaders: target === 'web' ? [
+      use: target === 'web' ? [
         styleLoaderName,
         `${cssLoaderName}?${styleQuery}`,
-        'postcss-loader',
+        postcssLoader,
       ] : [
         `${cssLoaderName}/locals?${styleQuery}&cssText`,
-        'postcss-loader',
+        postcssLoader,
       ],
     };
 
@@ -246,37 +252,19 @@ const bbq = config => (client, server) => {
     ];
   };
 
+  const exposeEntryLoaders = Object.keys(client.entry).map(name => ({
+    test: resolve.sync(client.entry[name], { basedir: config.basedir }),
+    enforce: 'post',
+    loader: `expose-loader?${name}`,
+  }));
+
   // configuration - module
   // client only
   client.module = xtend(client.module, {
-    loaders: getLoaders('web').concat(client.module && client.module.loaders).filter(v => v),
+    rules: getLoaders('web')
+      .concat(client.module && client.module.rules, exposeEntryLoaders)
+      .filter(v => v),
   });
-
-  const exposeEntryLoaders = Object
-  .keys(client.entry)
-  .map(name => ({
-    test: resolve.sync(client.entry[name], { basedir: config.basedir }),
-    loader: `expose-loader?${name}`,
-  }));
-  if (client.module.postLoaders) {
-    client.module.postLoaders = exposeEntryLoaders.concat(client.module.postLoaders).filter(v => v);
-  } else {
-    client.module.postLoaders = exposeEntryLoaders;
-  }
-
-
-  // postcss
-  const defaultPostcssPlugins = () => [
-    autoprefixer({
-      browsers: [
-        '>1%',
-        'last 4 versions',
-        'not ie < 8',
-      ],
-    }),
-  ];
-  client.postcss = defined(client.postcss, defaultPostcssPlugins);
-  server.postcss = defined(server.postcss, defaultPostcssPlugins);
 
 
   // output
@@ -308,8 +296,9 @@ const bbq = config => (client, server) => {
   // configuration - module
   // server only
   server.module = xtend(server.module, {
-    loaders: getLoaders('node').concat(server.module && server.module.loaders).filter(v => v),
-    postLoaders: [{ loader: libify }].concat(server.module && server.module.postLoaders).filter(v => v), /* eslint max-len:0 */
+    rules: getLoaders('node')
+      .concat(server.module && server.module.rules, { loader: libify, enforce: 'post' })
+      .filter(v => v),
   });
 
   // configuration - plugins
@@ -319,12 +308,12 @@ const bbq = config => (client, server) => {
     new NamedStats(),
     new webpack.IgnorePlugin(/webpack\.config/),
   ];
-  if (server.staticRendering) {
+  if (config.staticRendering) {
     serverPlugins.push(new StaticRendering(config, server));
   }
   server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (debug) {
     // configuration - recordsPath
     client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;
 
@@ -383,7 +372,7 @@ StaticRendering.prototype.get = function (srcfile, basedir) {
 };
 StaticRendering.prototype.apply = function (compiler) {
   const config = this.config;
-  const staticRendering = this.server.staticRendering;
+  const staticRendering = this.config.staticRendering;
   let uris;
   if (Array.isArray(staticRendering)) {
     uris = staticRendering;
@@ -394,7 +383,7 @@ StaticRendering.prototype.apply = function (compiler) {
   const entry = defined(staticRendering.app, this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir));
 
   compiler.plugin('after-compile', (compilation, callback) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (debug) {
       clearRequireCache(entry);
     }
     if (!Array.isArray(uris)) {

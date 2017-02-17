@@ -45,9 +45,9 @@
     "xhr-request": "^1.0.1"
   },
   "peerDependencies": {
-    "uglify-js": "~2.7.3",
-    "webpack": "^1.14",
-    "webpack-dev-server": "^1.16.2"
+    "uglify-js": "~2.7.5",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0"
   },
   "dependencies": {
     "autoprefixer": "^6.5.3",
@@ -65,22 +65,23 @@
     "css-loader-bbq": "1.0.3",
     "defined": "^1.0.0",
     "expose-loader": "^0.7.1",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "2.0.0-rc.3",
     "file-loader": "^0.9",
     "json-loader": "^0.5.4",
     "map-async": "^0.1.1",
     "mkdirp": "^0.5.1",
     "postcss-loader": "^0.8.2",
-    "react-dev-utils": "^0.3.0",
+    "react-dev-utils": "0.5.0",
     "resolve": "^1.1.7",
     "style-loader": "^0.13.1",
+    "uglify-js": "2.7.5",
     "url-loader": "^0.5.7",
     "warning": "^2.1.0",
-    "webpack": "^1.14",
+    "webpack": "2.2.1",
     "webpack-bbq-manifest-generator": "^1.0.3",
-    "webpack-core": "0.6.9",
-    "webpack-dev-server": "^1.16.2",
+    "webpack-dev-server": "2.3.0",
     "webpack-libify": "^1.1.2",
+    "webpack-sources": "0.1.4",
     "xtend": "^4.0.1"
   }
 }
