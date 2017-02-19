@@ -15,8 +15,6 @@ const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
-const UglifyJsPlugin = require('./UglifyJsPlugin');
-
 const libify = require.resolve('webpack-libify');
 // 开发环境标识
 const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
@@ -206,12 +204,11 @@ const bbq = (config) => {
 
       if (!debug) {
         /* eslint camelcase:0 */
-        const screw_ie8 = defined(client.screw_ie8, false);
-        plugins.push(new UglifyJsPlugin({
+        plugins.push(new webpack.optimize.UglifyJsPlugin({
           sourceMap: true,
-          mangle: { screw_ie8 },
-          compress: { warnings: false, screw_ie8 },
-          output: { screw_ie8 },
+          mangle: {},
+          compress: { warnings: false },
+          output: {},
         }));
       }
 
