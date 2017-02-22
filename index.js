@@ -164,6 +164,7 @@ const bbq = (config) => {
       throw new Error('context SHOULD NOT BE specified');
     }
 
+    const appRevisions = new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`);
     clients.forEach((client, index) => {
       /* eslint no-shadow:0 */
       // 添加 name
@@ -199,7 +200,7 @@ const bbq = (config) => {
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
-        new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`),
+        appRevisions,
       ];
 
       if (!debug) {

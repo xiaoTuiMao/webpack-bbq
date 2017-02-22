@@ -1,4 +1,5 @@
 {
-  "client.js": "client-cbc7bea89d5d731f9434.bundle.js",
-  "client.css": "client-278c01edbf283478390605df69f96146.bundle.css"
+  "render.js": "render.bundle.js",
+  "client.js": "client.bundle.js",
+  "client.css": "client.bundle.css"
 }
