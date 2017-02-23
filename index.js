@@ -164,6 +164,7 @@ const bbq = (config) => {
       throw new Error('context SHOULD NOT BE specified');
     }
 
+    const appRevisions = new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`);
     clients.forEach((client, index) => {
       /* eslint no-shadow:0 */
       // 添加 name
@@ -199,7 +200,7 @@ const bbq = (config) => {
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
-        new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`),
+        appRevisions,
       ];
 
       if (!debug) {
@@ -221,17 +222,11 @@ const bbq = (config) => {
       // client only
       client.node = xtend({ __filename: true, __dirname: true }, client.node);
 
-      const exposeEntryLoaders = Object.keys(client.entry).map(name => ({
-        test: resolve.sync(client.entry[name], { basedir: config.basedir }),
-        enforce: 'post',
-        loader: `expose-loader?${name}`,
-      }));
-
       // configuration - module
       // client only
       client.module = xtend(client.module, {
         rules: getLoaders('web')
-          .concat(client.module && client.module.rules, exposeEntryLoaders)
+          .concat(client.module && client.module.rules)
           .filter(v => v),
       });
 
