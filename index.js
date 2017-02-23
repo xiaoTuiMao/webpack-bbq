@@ -222,17 +222,11 @@ const bbq = (config) => {
       // client only
       client.node = xtend({ __filename: true, __dirname: true }, client.node);
 
-      const exposeEntryLoaders = Object.keys(client.entry).map(name => ({
-        test: resolve.sync(client.entry[name], { basedir: config.basedir }),
-        enforce: 'post',
-        loader: `expose-loader?${name}`,
-      }));
-
       // configuration - module
       // client only
       client.module = xtend(client.module, {
         rules: getLoaders('web')
-          .concat(client.module && client.module.rules, exposeEntryLoaders)
+          .concat(client.module && client.module.rules)
           .filter(v => v),
       });
 

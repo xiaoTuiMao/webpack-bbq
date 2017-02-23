@@ -15,7 +15,7 @@ module.exports = bbq(xtend(config, {
   },
 }))({
   entry: {
-    render: require.resolve('./src/frameworks/render'),
+    render: [require.resolve('./src/frameworks/render')],
   },
   output: { library: libraryName },
   plugins: [new webpack.DllPlugin({

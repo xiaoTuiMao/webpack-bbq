@@ -40,6 +40,7 @@ var Html = function Html(_ref) {
       null,
       _react2.default.createElement('div', { id: appName, dangerouslySetInnerHTML: { __html: appHtml } }),
       _react2.default.createElement('script', { dangerouslySetInnerHTML: { __html: 'window.initialState = ' + initialState + ';' } }),
+      _react2.default.createElement('script', { src: '' + _config2.default.publicPath + _appRevisions2.default['render.js'] }),
       _react2.default.createElement('script', { src: '' + _config2.default.publicPath + _appRevisions2.default[appName + '.js'] })
     )
   );
