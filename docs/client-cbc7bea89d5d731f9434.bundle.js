@@ -813,5 +813,5 @@ function(e,t,n){"use strict";function r(e){var t,n=e.Symbol;return"function"==ty
 function(e,t){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children||(e.children=[]),Object.defineProperty(e,"loaded",{enumerable:!0,get:function(){return e.l}}),Object.defineProperty(e,"id",{enumerable:!0,get:function(){return e.i}}),e.webpackPolyfill=1),e}},/*!***********************!*\
   !*** ./src/client.js ***!
   \***********************/
-function(e,t,n){(function(t){e.exports=t["src/client"]=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&cacheDirectory=true&babelrc=false!./client.js */108)}).call(t,n(/*! ./../../~/webpack/buildin/global.js */35))}]);
-//# sourceMappingURL=client-a37582a5cc1e04c2709e.bundle.js.map
+function(e,t,n){(function(t){e.exports=t.client=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&cacheDirectory=true&babelrc=false!./client.js */108)}).call(t,n(/*! ./../../~/webpack/buildin/global.js */35))}]);
+//# sourceMappingURL=client-cbc7bea89d5d731f9434.bundle.js.map
