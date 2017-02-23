@@ -224,9 +224,22 @@ const bbq = (config) => {
 
       // configuration - module
       // client only
+      const exposeEntryLoaders = Object.keys(client.entry).reduce((acc, name) => {
+        const addExposeLoader = (item) => {
+          const filepath = resolve.sync(item, { basedir: config.basedir });
+          const exposeName = expose(filepath, `${config.basedir}/src/`);
+          return {
+            test: filepath,
+            enforce: 'post',
+            loader: `expose-loader?${exposeName}`,
+          };
+        };
+        const item = client.entry[name];
+        return acc.concat(Array.isArray(item) ? item.map(addExposeLoader) : addExposeLoader(item));
+      }, []);
       client.module = xtend(client.module, {
         rules: getLoaders('web')
-          .concat(client.module && client.module.rules)
+          .concat(client.module && client.module.rules, exposeEntryLoaders)
           .filter(v => v),
       });
 
