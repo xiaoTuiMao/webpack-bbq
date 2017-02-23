@@ -275,7 +275,7 @@ const bbq = (config) => {
         server.entry = getEntry(server.entry);
       }
     } else {
-      throw new Error('server MUST HAVE one entry at most');
+      throw new Error('server MUST HAVE one entry at least');
     }
     if (Object.keys(server.entry).length > 1) {
       throw new Error('server MUST HAVE one entry at most');
