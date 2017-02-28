@@ -269,12 +269,9 @@ const bbq = (config) => {
         // configuration - recordsPath
         client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;
 
-        // const hotDevServer = require.resolve('webpack/hot/dev-server');
-        // const devServerClient = require.resolve('webpack-dev-server/client');
-        const devServerClient = require.resolve('react-dev-utils/webpackHotDevClient');
+        const devServerClient = require.resolve('webpack-dev-server/client');
         Object.keys(client.entry).forEach((key) => {
           client.entry[key] = [].concat(client.entry[key]).concat(devServerClient);
-          //  .concat(`${devServerClient}?/`, hotDevServer);
         });
 
         client.plugins.push(new webpack.HotModuleReplacementPlugin());
