@@ -3,6 +3,7 @@ const xtend = require('xtend');
 const bbq = require('../');
 
 const config = require('./config');
+
 const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 const libraryName = debug ? '[name]' : '[name]_[hash]';
 

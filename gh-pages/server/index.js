@@ -1,9 +1,8 @@
 /* eslint global-require:0 */
-const server = require('./server');
-
 const port = Number(process.env.PORT) || 8080;
 
 if (process.env.NODE_ENV === 'production') {
+  const server = require('./server');
   server.listen(port, '0.0.0.0', function () {
     console.info(`server is listening at ${JSON.stringify(this.address())}`);
   });
@@ -32,12 +31,19 @@ if (process.env.NODE_ENV === 'production') {
       console.info(stats.toString(statsOptions));
     }
   };
+  const runAndwatch = (cb) => {
+    let firstRun = true;
+    return (err, stats) => {
+      onStats(err, stats);
+      if (firstRun) {
+        cb();
+        firstRun = false;
+      }
+    };
+  };
 
   const dllCompiler = webpack(webpackConfig[0]);
-  dllCompiler.run((err, stats) => {
-    onStats(err, stats);
-    dllCompiler.watch({}, onStats);
-
+  dllCompiler.watch({}, runAndwatch(() => {
     const mainCompiler = webpack(webpackConfig[1]);
     const devServer = new WebpackDevServer(mainCompiler, {
       contentBase: config.outputdir,
@@ -51,16 +57,16 @@ if (process.env.NODE_ENV === 'production') {
 
     const libpack = webpack(webpackConfig[2]);
     libpack.outputFileSystem = devServer.middleware.fileSystem;
-    libpack.run((liberr, libstats) => {
-      onStats(liberr, libstats);
-
-      server.listen(port + 1, '0.0.0.0', function () {
-        console.info(`server is listening at ${JSON.stringify(this.address())}`);
+    libpack.watch({}, runAndwatch(() => {
+      const server = require('./server');
+      devServer.middleware.waitUntilValid(() => {
+        server.listen(port + 1, '0.0.0.0', function () {
+          console.info(`server is listening at ${JSON.stringify(this.address())}`);
+        });
       });
       devServer.listen(port, '0.0.0.0', function () {
         console.info(`webpack dev server is listening at ${JSON.stringify(this.address())}`);
       });
-      libpack.watch({}, onStats);
-    });
-  });
+    }));
+  }));
 }

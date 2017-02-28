@@ -19,6 +19,15 @@ const libify = require.resolve('webpack-libify');
 // 开发环境标识
 const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 
+if (debug) {
+  // NOTICE hack https://github.com/webpack/watchpack/issues/25
+  const DirectoryWatcher = require('watchpack/lib/DirectoryWatcher');
+  const setFileTime = DirectoryWatcher.prototype.setFileTime;
+  DirectoryWatcher.prototype.setFileTime = function (filePath, mtime, initial, type) {
+    return setFileTime.call(this, filePath, mtime - 10000, initial, type);
+  };
+}
+
 /**
  * config.basedir
  * config.outputdir
