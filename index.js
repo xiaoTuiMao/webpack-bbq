@@ -234,9 +234,9 @@ const bbq = (config) => {
       // configuration - module
       // client only
       const exposeEntryLoaders = Object.keys(client.entry).reduce((acc, name) => {
-        const addExposeLoader = (item) => {
+        const addExposeLoader = (item, index) => {
           const filepath = resolve.sync(item, { basedir: config.basedir });
-          const exposeName = expose(filepath, `${config.basedir}/src/`);
+          const exposeName = index === undefined ? name : expose(filepath, `${config.basedir}/src/`);
           return {
             test: filepath,
             enforce: 'post',
