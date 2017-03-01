@@ -90,6 +90,8 @@ const bbq = (config) => {
         'add-module-exports',
         'transform-class-properties',
         'transform-async-to-generator',
+        'transform-es3-member-expression-literals',
+        'babel-plugin-transform-es3-property-literals',
       ],
       cacheDirectory: true,
       babelrc: false,
