@@ -22,7 +22,7 @@ function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}
 function(e,t,n){e.exports=n(0)(60)},/*!*******************!*\
   !*** ./config.js ***!
   \*******************/
-function(e,t,n){"use strict";(function(t){const r=n(/*! path */16),o=t,i="/webpack-bbq/",u=i;e.exports={basedir:o,outputdir:r.resolve(o,"../docs"),rootdir:i,publicPath:u}}).call(t,"")},/*!************************!*\
+function(e,t,n){"use strict";(function(t){const r=n(/*! path */16),o=t;var i="/";i="/webpack-bbq/";const u=i;e.exports={basedir:o,outputdir:r.resolve(o,"../docs"),rootdir:i,publicPath:u}}).call(t,"")},/*!************************!*\
   !*** ./src/Example.js ***!
   \************************/
 function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function u(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),a=n(/*! react */4),l=r(a),f=n(/*! ./client.css */17),c=r(f),p=n(/*! ./bbq.jpg */15),d=r(p),h=function(e){function t(){return o(this,t),i(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return u(t,e),s(t,[{key:"render",value:function(){var e=this.props.children;return l.default.createElement("div",null,l.default.createElement("div",{className:c.default.img},l.default.createElement("img",{src:d.default,alt:"bbq"})),e)}}]),t}(a.Component);h.getInitialCssText=function(){return c.default.toString()},t.default=h,e.exports=t.default},/*!**********************!*\
@@ -65,4 +65,4 @@ function(e,t,n){e.exports=n(0)(69)},/*!***********************!*\
   !*** ./src/client.js ***!
   \***********************/
 function(e,t,n){(function(t){e.exports=t.client=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&plugins[]=transform-es3-member-expression-literals&plugins[]=babel-plugin-transform-es3-property-literals&cacheDirectory=true&babelrc=false!./client.js */5)}).call(t,n(/*! ./../../~/webpack/buildin/global.js */6))}]);
-//# sourceMappingURL=client-7b8a64a1ba1b8c01859f.bundle.js.map
+//# sourceMappingURL=client-a348dc34bc54fdb17a3e.bundle.js.map

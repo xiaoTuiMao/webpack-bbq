@@ -5,7 +5,10 @@
 const path = require('path');
 
 const basedir = __dirname;
-const rootdir = '/webpack-bbq/';
+var rootdir = '/';
+if (process.env.NODE_ENV === 'production') {
+  rootdir = '/webpack-bbq/';
+}
 const publicPath = rootdir;
 
 module.exports = {

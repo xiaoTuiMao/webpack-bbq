@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
     colors: { level: 1, hasBasic: true, has256: false, has16m: false },
   };
 
-  rimraf.sync(`${config.basedir}/lib/`);
+  rimraf.sync(`${config.basedir}/lib/*`);
 
   const onStats = (err, stats) => {
     if (err) {
@@ -49,7 +49,6 @@ if (process.env.NODE_ENV === 'production') {
       contentBase: config.outputdir,
       publicPath: config.publicPath,
       stats: statsOptions,
-      hot: true,
       proxy: {
         '**': `http://localhost:${port + 1}`,
       },
@@ -64,9 +63,10 @@ if (process.env.NODE_ENV === 'production') {
           console.info(`server is listening at ${JSON.stringify(this.address())}`);
         });
       });
-      devServer.listen(port, '0.0.0.0', function () {
-        console.info(`webpack dev server is listening at ${JSON.stringify(this.address())}`);
-      });
     }));
+
+    devServer.listen(port, '0.0.0.0', function () {
+      console.info(`webpack dev server is listening at ${JSON.stringify(this.address())}`);
+    });
   }));
 }
