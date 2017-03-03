@@ -1,5 +1,5 @@
 {
-  "name": "render_47c1cde946336f5b94b7",
+  "name": "render_8b1e72c1b2e882c20d12",
   "content": {
     "../node_modules/fbjs/lib/invariant.js": {
       "id": 0,
@@ -491,7 +491,7 @@
       "id": 106,
       "meta": {}
     },
-    "../node_modules/babel-loader/lib/index.js?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&cacheDirectory=true&babelrc=false!./src/frameworks/render.js": {
+    "../node_modules/babel-loader/lib/index.js?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&plugins[]=transform-es3-member-expression-literals&plugins[]=babel-plugin-transform-es3-property-literals&cacheDirectory=true&babelrc=false!./src/frameworks/render.js": {
       "id": 107,
       "meta": {}
     },

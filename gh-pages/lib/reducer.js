@@ -15,7 +15,7 @@ var url = function url() {
   return state;
 };
 
-exports.default = (0, _redux.combineReducers)({
+exports['default'] = (0, _redux.combineReducers)({
   appName: appName,
   url: url
 });

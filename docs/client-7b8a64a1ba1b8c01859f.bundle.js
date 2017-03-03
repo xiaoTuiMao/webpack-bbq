@@ -1,7 +1,7 @@
 !function(e){function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="/webpack-bbq/",t(t.s=21)}([/*!**********************************************!*\
-  !*** external "render_47c1cde946336f5b94b7" ***!
+  !*** external "render_8b1e72c1b2e882c20d12" ***!
   \**********************************************/
-function(e,t){e.exports=render_47c1cde946336f5b94b7},/*!*******************************************!*\
+function(e,t){e.exports=render_8b1e72c1b2e882c20d12},/*!*******************************************!*\
   !*** ../~/css-loader-bbq/lib/css-base.js ***!
   \*******************************************/
 function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var n=this[t];n[2]?e.push("@media "+n[2]+"{"+n[1]+"}"):e.push(n[1])}return e.join("")},e.i=function(t,n){"string"==typeof t&&(t=[[null,t,""]]);for(var r={},o=0;o<this.length;o++){var i=this[o][0];"number"==typeof i&&(r[i]=!0)}for(o=0;o<t.length;o++){var u=t[o];"number"==typeof u[0]&&r[u[0]]||(n&&!u[2]?u[2]=n:n&&(u[2]="("+u[2]+") and ("+n+")"),e.push(u))}},e}},/*!**************************************!*\
@@ -11,13 +11,13 @@ function(e,t){function n(e,t){for(var n=0;n<e.length;n++){var r=e[n],o=p[r.id];i
   !*** ./src/index.css ***!
   \***********************/
 function(e,t,n){var r=n(/*! !./../../~/css-loader-bbq?modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=&importLoaders=1!./../../~/postcss-loader??ref--4-2!./index.css */13);"string"==typeof r&&(r=[[e.i,r,""]]);n(/*! ./../../~/style-loader/addStyles.js */2)(r,{});r.locals&&(e.exports=r.locals)},/*!***********************************************************************************************!*\
-  !*** delegated ../node_modules/react/react.js from dll-reference render_47c1cde946336f5b94b7 ***!
+  !*** delegated ../node_modules/react/react.js from dll-reference render_8b1e72c1b2e882c20d12 ***!
   \***********************************************************************************************/
-function(e,t,n){e.exports=n(0)(9)},/*!****************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&cacheDirectory=true&babelrc=false!./src/client.js ***!
-  \****************************************************************************************************************************************************************************************************************************************************************/
+function(e,t,n){e.exports=n(0)(9)},/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&plugins[]=transform-es3-member-expression-literals&plugins[]=babel-plugin-transform-es3-property-literals&cacheDirectory=true&babelrc=false!./src/client.js ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}var o=n(/*! ./frameworks/render */19),i=r(o),u=n(/*! ./reducer */10),s=r(u),a=n(/*! ./routes */11),l=r(a);(0,i.default)({routes:l.default,reducer:s.default})},/*!**********************************************************************************************************!*\
-  !*** delegated ../node_modules/webpack/buildin/global.js from dll-reference render_47c1cde946336f5b94b7 ***!
+  !*** delegated ../node_modules/webpack/buildin/global.js from dll-reference render_8b1e72c1b2e882c20d12 ***!
   \**********************************************************************************************************/
 function(e,t,n){e.exports=n(0)(60)},/*!*******************!*\
   !*** ./config.js ***!
@@ -53,16 +53,16 @@ function(e,t,n){(function(e){function n(e,t){for(var n=0,r=e.length-1;r>=0;r--){
   !*** ./src/client.css ***!
   \************************/
 function(e,t,n){var r=n(/*! !./../../~/css-loader-bbq?modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=&importLoaders=1!./../../~/postcss-loader??ref--4-2!./client.css */12);"string"==typeof r&&(r=[[e.i,r,""]]);n(/*! ./../../~/style-loader/addStyles.js */2)(r,{});r.locals&&(e.exports=r.locals)},/*!**************************************************************************************************!*\
-  !*** delegated ../node_modules/redux/es/index.js from dll-reference render_47c1cde946336f5b94b7 ***!
+  !*** delegated ../node_modules/redux/es/index.js from dll-reference render_8b1e72c1b2e882c20d12 ***!
   \**************************************************************************************************/
 function(e,t,n){e.exports=n(0)(103)},/*!*******************************************************************************************!*\
-  !*** delegated ./src/frameworks/render.js from dll-reference render_47c1cde946336f5b94b7 ***!
+  !*** delegated ./src/frameworks/render.js from dll-reference render_8b1e72c1b2e882c20d12 ***!
   \*******************************************************************************************/
 function(e,t,n){e.exports=n(0)(105)},/*!***************************************************************************************************!*\
-  !*** delegated ../node_modules/process/browser.js from dll-reference render_47c1cde946336f5b94b7 ***!
+  !*** delegated ../node_modules/process/browser.js from dll-reference render_8b1e72c1b2e882c20d12 ***!
   \***************************************************************************************************/
 function(e,t,n){e.exports=n(0)(69)},/*!***********************!*\
   !*** ./src/client.js ***!
   \***********************/
-function(e,t,n){(function(t){e.exports=t.client=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&cacheDirectory=true&babelrc=false!./client.js */5)}).call(t,n(/*! ./../../~/webpack/buildin/global.js */6))}]);
-//# sourceMappingURL=client-da544b563efe62496f20.bundle.js.map
+function(e,t,n){(function(t){e.exports=t.client=n(/*! -!../~/babel-loader/lib?presets[]=react&presets[]=es2015&plugins[]=transform-object-rest-spread&plugins[]=add-module-exports&plugins[]=transform-class-properties&plugins[]=transform-async-to-generator&plugins[]=transform-es3-member-expression-literals&plugins[]=babel-plugin-transform-es3-property-literals&cacheDirectory=true&babelrc=false!./client.js */5)}).call(t,n(/*! ./../../~/webpack/buildin/global.js */6))}]);
+//# sourceMappingURL=client-7b8a64a1ba1b8c01859f.bundle.js.map

@@ -16,7 +16,7 @@ var _appRevisions = require('../../../app-revisions.json');
 
 var _appRevisions2 = _interopRequireDefault(_appRevisions);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var Html = function Html(_ref) {
   var store = _ref.store,
@@ -27,24 +27,24 @@ var Html = function Html(_ref) {
   var appName = state.appName;
 
   var initialState = JSON.stringify(state);
-  return _react2.default.createElement(
+  return _react2['default'].createElement(
     'html',
     { lang: 'zh' },
-    _react2.default.createElement(
+    _react2['default'].createElement(
       'head',
       null,
-      _react2.default.createElement('style', { dangerouslySetInnerHTML: { __html: cssText } })
+      _react2['default'].createElement('style', { dangerouslySetInnerHTML: { __html: cssText } })
     ),
-    _react2.default.createElement(
+    _react2['default'].createElement(
       'body',
       null,
-      _react2.default.createElement('div', { id: appName, dangerouslySetInnerHTML: { __html: appHtml } }),
-      _react2.default.createElement('script', { dangerouslySetInnerHTML: { __html: 'window.initialState = ' + initialState + ';' } }),
-      _react2.default.createElement('script', { src: '' + _config2.default.publicPath + _appRevisions2.default['render.js'] }),
-      _react2.default.createElement('script', { src: '' + _config2.default.publicPath + _appRevisions2.default[appName + '.js'] })
+      _react2['default'].createElement('div', { id: appName, dangerouslySetInnerHTML: { __html: appHtml } }),
+      _react2['default'].createElement('script', { dangerouslySetInnerHTML: { __html: 'window.initialState = ' + initialState + ';' } }),
+      _react2['default'].createElement('script', { src: '' + _config2['default'].publicPath + _appRevisions2['default']['render.js'] }),
+      _react2['default'].createElement('script', { src: '' + _config2['default'].publicPath + _appRevisions2['default'][appName + '.js'] })
     )
   );
 }; /* eslint react/prop-types:0 */
 /* eslint react/no-danger:0 */
-exports.default = Html;
+exports['default'] = Html;
 module.exports = exports['default'];
