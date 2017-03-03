@@ -17,6 +17,7 @@ const Html = ({ store, cssText, appHtml }) => {
       <body>
         <div id={appName} dangerouslySetInnerHTML={{ __html: appHtml }} />
         <script dangerouslySetInnerHTML={{ __html: `window.initialState = ${initialState};` }} />
+        <script src={`${config.publicPath}${revisions['render.js']}`} />
         <script src={`${config.publicPath}${revisions[`${appName}.js`]}`} />
       </body>
     </html>

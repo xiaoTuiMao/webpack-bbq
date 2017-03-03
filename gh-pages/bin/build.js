@@ -15,17 +15,20 @@ const statsOptions = {
 rimraf.sync(config.outputdir);
 rimraf.sync(`${config.basedir}/lib`);
 
-const onStats = (err, stats) => {
+const onStatsCreator = cb => (err, stats) => {
   if (err) {
     throw err;
   }
   console.info(stats.toString(statsOptions));
   if (stats.hasErrors()) {
     process.exit(1);
+    return;
   }
+  if (cb) cb();
 };
 
-webpack(webpackConfig[0]).run((err, stats) => {
-  onStats(err, stats);
-  webpack(webpackConfig[1]).run(onStats);
-});
+webpack(webpackConfig[0]).run(onStatsCreator(() => {
+  webpack(webpackConfig[1]).run(onStatsCreator(() => {
+    webpack(webpackConfig[2]).run(onStatsCreator());
+  }));
+}));

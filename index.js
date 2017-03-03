@@ -15,84 +15,33 @@ const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
 const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
-const UglifyJsPlugin = require('./UglifyJsPlugin');
-
 const libify = require.resolve('webpack-libify');
+// 开发环境标识
+const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 
+if (debug) {
+  // NOTICE hack https://github.com/webpack/watchpack/issues/25
+  const DirectoryWatcher = require('watchpack/lib/DirectoryWatcher');
+  const setFileTime = DirectoryWatcher.prototype.setFileTime;
+  DirectoryWatcher.prototype.setFileTime = function (filePath, mtime, initial, type) {
+    return setFileTime.call(this, filePath, mtime - 10000, initial, type);
+  };
+}
 
 /**
  * config.basedir
  * config.outputdir
  * config.rootdir
  * config.publicPath
+ *
  * config.cssLoaderHashPrefix
+ * config.postcss
+ * config.staticRendering
  *
  * client
  * server
  */
-const bbq = config => (client, server) => {
-  client = defined(client, {});
-  server = defined(server, {});
-
-  // 添加 name
-  client.name = 'client';
-  server.name = 'server';
-
-  const context = config.basedir;
-
-  // configuration - context
-  // shared
-  // context 必须由 config 指定!
-  if (client.context || server.context) {
-    throw new Error('context SHOULD NOT BE specified');
-  }
-  client.context = context;
-  server.context = context;
-
-
-  const getEntry = (id) => {
-    const filepath = resolve.sync(id, { basedir: config.basedir });
-    const appName = expose(filepath, `${config.basedir}/src/`);
-    return { [appName]: filepath };
-  };
-
-  // 主文件 (entry)
-  // configuration - entry
-  // shared
-  if (client.entry) {
-    if (typeof client.entry === 'string') {
-      client.entry = getEntry(client.entry);
-    }
-  } else {
-    client.entry = getEntry(`${config.basedir}/src/`);
-  }
-
-  if (server.entry) {
-    if (typeof server.entry === 'string') {
-      server.entry = getEntry(server.entry);
-    }
-  } else {
-    server.entry = client.entry;
-  }
-  if (Object.keys(server.entry).length > 1) {
-    throw new Error('server MUST HAVE one entry at most');
-  }
-
-
-  // 开发环境
-  const debug = process.env.NODE_ENV === 'development';
-
-  // configuration - debug
-  // shared
-  client.debug = defined(client.debug, debug);
-  server.debug = defined(server.debug, debug);
-
-
-  // configuration - bail
-  // shared
-  client.bail = defined(client.bail, !client.debug);
-  server.bail = defined(server.bail, !server.debug);
-
+const bbq = (config) => {
   // 文件名需要有 .bundle
   // 文件名在开发环境中没有 chunkhash, contenthash, hash
   // devtool 也不一样
@@ -112,63 +61,24 @@ const bbq = config => (client, server) => {
     devtool = 'source-map';
   }
 
-
-  // configuration - devtool
-  // client only
-  client.devtool = defined(client.devtool, devtool);
-
-
-  // plugins
-  const plugins = [
-    new NamedStats(),
-    new ExtractTextPlugin(cssfilename),
-    new webpack.optimize.CommonsChunkPlugin({
-      filename,
-      children: true,
-      minChunks: defined(client.minChunks, 3),
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
-    new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`),
-  ];
-
-  if (process.env.NODE_ENV === 'production') {
-    const screw_ie8 = defined(client.screw_ie8, false); /* eslint camelcase:0 */
-    plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
-    plugins.push(new webpack.optimize.DedupePlugin());
-    plugins.push(new UglifyJsPlugin({
-      mangle: { screw_ie8 },
-      compress: { warnings: false, screw_ie8 },
-      output: { screw_ie8 },
-    }));
-  }
-
-  // configuration - plugins
-  // client only
-  // 将已有的 plugins 添加到 bbq 设定的后面？
-  client.plugins = plugins.concat(client.plugins).filter(v => v);
-
-
-  const node = { __filename: true, __dirname: true };
-
-  // configuration - node
-  // client only
-  client.node = xtend(node, client.node);
-
+  const getEntry = (id) => {
+    const filepath = resolve.sync(id, { basedir: config.basedir });
+    const appName = expose(filepath, `${config.basedir}/src/`);
+    return { [appName]: filepath };
+  };
 
   // get loaders for specified target
   // supported targets: web, node
   const getLoaders = (target) => {
-    const fontLoader = {
+    const font = {
       test: /\.(woff|ttf|woff2|eot)(\?.*)?$/,
       loader: `file-loader?name=${bundlename}`,
     };
-    const imagesLoader = {
+    const images = {
       test: /\.(ico|jpg|jpeg|png|gif|webp|svg)(\?.*)?$/,
       loader: `file-loader?name=${bundlename}`,
     };
-    const avLoader = {
+    const av = {
       test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
       loader: `url-loader?name=${bundlename}&limit=10000`,
     };
@@ -180,6 +90,8 @@ const bbq = config => (client, server) => {
         'add-module-exports',
         'transform-class-properties',
         'transform-async-to-generator',
+        'transform-es3-member-expression-literals',
+        'babel-plugin-transform-es3-property-literals',
       ],
       cacheDirectory: true,
       babelrc: false,
@@ -190,159 +102,240 @@ const bbq = config => (client, server) => {
     babelquery = qs.stringify(babelquery, null, null, {
       encodeURIComponent: s => (s),
     });
-    const jsLoader = {
+    const js = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loaders: [`babel-loader?${babelquery}`],
+      loader: `babel-loader?${babelquery}`,
     };
 
     const styleLoaderName = 'style-loader';
     const cssLoaderName = 'css-loader-bbq';
-    const externalCssLoader = {
+    const defaultPostcssPlugins = () => [
+      autoprefixer({
+        browsers: [
+          '>1%',
+          'last 4 versions',
+          'not ie < 8',
+        ],
+      }),
+    ];
+    const postcssLoader = {
+      loader: 'postcss-loader',
+      options: { plugins: defined(config.postcss, defaultPostcssPlugins) },
+    };
+    const externalCss = {
       test: /\.css$/,
       include: /\/node_modules\//,
-      loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, cssLoaderName).split('!') :
-        [`${cssLoaderName}`],
+      use: target === 'web' ?
+      ExtractTextPlugin.extract({ fallback: styleLoaderName, use: cssLoaderName }) :
+      [`${cssLoaderName}`],
     };
     const globalCssRe = /\.global\.css$/;
-    const globalCssLoader = {
+    const globalCss = {
       test: globalCssRe,
       include: `${config.basedir}/src/`,
-      loaders: target === 'web' ?
-        ExtractTextPlugin.extract(styleLoaderName, [`${cssLoaderName}?importLoaders=1`, 'postcss-loader']).split('!') :
-        [`${cssLoaderName}?importLoaders=1`, 'postcss-loader'],
+      use: target === 'web' ?
+      ExtractTextPlugin.extract({
+        fallback: styleLoaderName,
+        use: [`${cssLoaderName}?importLoaders=1`, postcssLoader],
+      }) :
+      [`${cssLoaderName}?importLoaders=1`, postcssLoader],
     };
     const hashPrefix = config.cssLoaderHashPrefix || '';
     const styleQuery = `modules&localIdentName=[name]__[local]___[hash:base64:5]&hashPrefix=${hashPrefix}&importLoaders=1`;
-    const styleLoader = {
+    const style = {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
       exclude: filepath => globalCssRe.test(path.basename(filepath)),
-      loaders: target === 'web' ? [
+      use: target === 'web' ? [
         styleLoaderName,
         `${cssLoaderName}?${styleQuery}`,
-        'postcss-loader',
+        postcssLoader,
       ] : [
         `${cssLoaderName}/locals?${styleQuery}&cssText`,
-        'postcss-loader',
+        postcssLoader,
       ],
     };
 
-    const jsonLoader = {
+    const json = {
       test: /\.json$/,
       loader: 'json-loader',
     };
 
-    return [
-      jsLoader,
-      jsonLoader,
-      externalCssLoader,
-      globalCssLoader,
-      styleLoader,
-      fontLoader,
-      imagesLoader,
-      avLoader,
-    ];
+    return [js, json, externalCss, globalCss, style, font, images, av];
   };
 
-  // configuration - module
-  // client only
-  client.module = xtend(client.module, {
-    loaders: getLoaders('web').concat(client.module && client.module.loaders).filter(v => v),
-  });
+  return function (/* client, client, client, ..., server */) {
+    const args = [].slice.call(arguments);
+    const clients = args.slice(0, -1);
+    const server = defined(args[args.length - 1], {});
 
-  const exposeEntryLoaders = Object
-  .keys(client.entry)
-  .map(name => ({
-    test: resolve.sync(client.entry[name], { basedir: config.basedir }),
-    loader: `expose-loader?${name}`,
-  }));
-  if (client.module.postLoaders) {
-    client.module.postLoaders = exposeEntryLoaders.concat(client.module.postLoaders).filter(v => v);
-  } else {
-    client.module.postLoaders = exposeEntryLoaders;
-  }
+    // context 必须由 config 指定!
+    if (clients.findIndex(item => (item.context !== undefined)) !== -1 || server.context) {
+      throw new Error('context SHOULD NOT BE specified');
+    }
 
+    const appRevisions = new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`);
+    clients.forEach((client, index) => {
+      /* eslint no-shadow:0 */
+      // 添加 name
+      client.name = clients.length === 1 ? 'client' : `client_${index}`;
 
-  // postcss
-  const defaultPostcssPlugins = () => [
-    autoprefixer({
-      browsers: [
-        '>1%',
-        'last 4 versions',
-        'not ie < 8',
-      ],
-    }),
-  ];
-  client.postcss = defined(client.postcss, defaultPostcssPlugins);
-  server.postcss = defined(server.postcss, defaultPostcssPlugins);
+      // configuration - context
+      // shared
+      client.context = config.basedir;
 
+      // 主文件 (entry)
+      // configuration - entry
+      // shared
+      if (client.entry) {
+        if (typeof client.entry === 'string') {
+          client.entry = getEntry(client.entry);
+        }
+      } else {
+        client.entry = getEntry(`${config.basedir}/src/`);
+      }
 
-  // output
-  const output = xtend(client.output, {
-    filename,
-    chunkFilename: filename,
-    path: config.outputdir,
-    pathinfo: true,
-    publicPath: defined(config.publicPath, config.rootdir),
-  });
+      // configuration - bail
+      // shared
+      client.bail = defined(client.bail, !debug);
 
-  // configuration - output
-  // shared partial
-  client.output = output;
+      // configuration - devtool
+      // client only
+      client.devtool = defined(client.devtool, devtool);
 
+      // plugins
+      const plugins = [
+        new NamedStats(),
+        new ExtractTextPlugin(cssfilename),
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        }),
+        appRevisions,
+      ];
 
-  // server land
+      if (!debug) {
+        /* eslint camelcase:0 */
+        plugins.push(new webpack.optimize.UglifyJsPlugin({
+          sourceMap: true,
+          mangle: {},
+          compress: { warnings: false },
+          output: {},
+        }));
+      }
 
-  // configuration - target
-  // server only
-  server.target = 'node';
+      // configuration - plugins
+      // client only
+      // 将已有的 plugins 添加到 bbq 设定的后面？
+      client.plugins = plugins.concat(client.plugins).filter(v => v);
 
-  // configuration - output
-  // server only
-  server.output = xtend(client.output, {
-    path: `${config.outputdir}/SHOULD_NOT_EXISTS_DIRECTORY`,
-  });
+      // configuration - node
+      // client only
+      client.node = xtend({ __filename: true, __dirname: true }, client.node);
 
-  // configuration - module
-  // server only
-  server.module = xtend(server.module, {
-    loaders: getLoaders('node').concat(server.module && server.module.loaders).filter(v => v),
-    postLoaders: [{ loader: libify }].concat(server.module && server.module.postLoaders).filter(v => v), /* eslint max-len:0 */
-  });
+      // configuration - module
+      // client only
+      const exposeEntryLoaders = Object.keys(client.entry).reduce((acc, name) => {
+        const addExposeLoader = (item, index) => {
+          const filepath = resolve.sync(item, { basedir: config.basedir });
+          const exposeName = index === undefined ? name : expose(filepath, `${config.basedir}/src/`);
+          return {
+            test: filepath,
+            enforce: 'post',
+            loader: `expose-loader?${exposeName}`,
+          };
+        };
+        const item = client.entry[name];
+        return acc.concat(Array.isArray(item) ? item.map(addExposeLoader) : addExposeLoader(item));
+      }, []);
+      client.module = xtend(client.module, {
+        rules: getLoaders('web')
+          .concat(client.module && client.module.rules, exposeEntryLoaders)
+          .filter(v => v),
+      });
 
-  // configuration - plugins
-  // server only
-  const serverPlugins = [
-    new ShouldNotEmit(),
-    new NamedStats(),
-    new webpack.IgnorePlugin(/webpack\.config/),
-  ];
-  if (server.staticRendering) {
-    serverPlugins.push(new StaticRendering(config, server));
-  }
-  server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
+      // output
+      const output = xtend(client.output, {
+        filename,
+        chunkFilename: filename,
+        path: config.outputdir,
+        pathinfo: true,
+        publicPath: defined(config.publicPath, config.rootdir),
+      });
 
-  if (process.env.NODE_ENV === 'development') {
-    // configuration - recordsPath
-    client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;
+      // configuration - output
+      // shared partial
+      client.output = output;
 
-    // const hotDevServer = require.resolve('webpack/hot/dev-server');
-    // const devServerClient = require.resolve('webpack-dev-server/client');
-    const devServerClient = require.resolve('react-dev-utils/webpackHotDevClient');
-    Object.keys(client.entry).forEach((key) => {
-      client.entry[key] = [].concat(client.entry[key]).concat(devServerClient);
-       //  .concat(`${devServerClient}?/`, hotDevServer);
+      if (debug) {
+        // configuration - recordsPath
+        client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;
+
+        const devServerClient = require.resolve('webpack-dev-server/client');
+        Object.keys(client.entry).forEach((key) => {
+          client.entry[key] = [].concat(client.entry[key]).concat(devServerClient);
+        });
+
+        client.plugins.push(new webpack.HotModuleReplacementPlugin());
+      }
     });
 
-    client.plugins.push(new webpack.HotModuleReplacementPlugin());
-  }
 
-  return [
-    client,
-    server,
-  ];
+    // server land
+    server.name = 'server';
+
+    // configuration - context
+    // shared
+    server.context = config.basedir;
+
+    // 主文件 (entry)
+    // configuration - entry
+    // shared
+    if (server.entry) {
+      if (typeof server.entry === 'string') {
+        server.entry = getEntry(server.entry);
+      }
+    } else {
+      throw new Error('server MUST HAVE one entry at least');
+    }
+    if (Object.keys(server.entry).length > 1) {
+      throw new Error('server MUST HAVE one entry at most');
+    }
+
+    server.bail = defined(server.bail, !debug);
+
+    // configuration - target
+    // server only
+    server.target = 'node';
+
+    // configuration - output
+    // server only
+    server.output = xtend(clients[0].output, {
+      path: `${config.outputdir}/SHOULD_NOT_EXISTS_DIRECTORY`,
+    });
+
+    // configuration - module
+    // server only
+    server.module = xtend(server.module, {
+      rules: getLoaders('node')
+        .concat(server.module && server.module.rules, { loader: libify, enforce: 'post' })
+        .filter(v => v),
+    });
+
+    // configuration - plugins
+    // server only
+    const serverPlugins = [
+      new ShouldNotEmit(),
+      new NamedStats(),
+      new webpack.IgnorePlugin(/webpack\.config/),
+    ];
+    if (config.staticRendering) {
+      serverPlugins.push(new StaticRendering(config, server));
+    }
+    server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
+
+    return clients.concat(server);
+  };
 };
 
 function ShouldNotEmit() {}
@@ -356,10 +349,10 @@ function makeBold(useColors) {
     return str;
   };
 }
-NamedStats.prototype.apply = function (compiler) {
+NamedStats.prototype.apply = function apply(compiler) {
   compiler.plugin('done', (stats) => {
     const toString = stats.toString;
-    stats.toString = function (options) {
+    stats.toString = function statsToString(options) {
       /* eslint prefer-rest-params:0 */
       const bold = makeBold(defined(options.colors, false));
       const name = this.compilation.options.name;
@@ -373,7 +366,7 @@ function StaticRendering(config, server) {
   this.server = server;
 }
 
-StaticRendering.prototype.get = function (srcfile, basedir) {
+StaticRendering.prototype.get = function get(srcfile, basedir) {
   const ext = path.extname(srcfile);
   let libfile = basedir + srcfile.slice(basedir.length).replace('/src/', '/lib/');
   if (ext === '' || (ext !== '.js' && ext !== '.json')) {
@@ -381,9 +374,9 @@ StaticRendering.prototype.get = function (srcfile, basedir) {
   }
   return libfile;
 };
-StaticRendering.prototype.apply = function (compiler) {
+StaticRendering.prototype.apply = function apply(compiler) {
   const config = this.config;
-  const staticRendering = this.server.staticRendering;
+  const staticRendering = this.config.staticRendering;
   let uris;
   if (Array.isArray(staticRendering)) {
     uris = staticRendering;
@@ -394,7 +387,7 @@ StaticRendering.prototype.apply = function (compiler) {
   const entry = defined(staticRendering.app, this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir));
 
   compiler.plugin('after-compile', (compilation, callback) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (debug) {
       clearRequireCache(entry);
     }
     if (!Array.isArray(uris)) {

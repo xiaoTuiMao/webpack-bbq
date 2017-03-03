@@ -1,6 +1,5 @@
 {
-  "client.js": "client-0b8f405f600d00a577e1.bundle.js",
-  "client.css": "client-7411b9041dad72eeed20b4bced355941.bundle.css",
-  "client.js.map": "client-0b8f405f600d00a577e1.bundle.js.map",
-  "client.css.map": "client-7411b9041dad72eeed20b4bced355941.bundle.css.map"
+  "render.js": "render-768cb6f406c1e5a565b1.bundle.js",
+  "client.js": "client-7b8a64a1ba1b8c01859f.bundle.js",
+  "client.css": "client-278c01edbf283478390605df69f96146.bundle.css"
 }

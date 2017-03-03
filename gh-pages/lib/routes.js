@@ -14,16 +14,16 @@ var _Example2 = _interopRequireDefault(_Example);
 
 var _config = require('../config');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var index = {
   path: _config.rootdir,
-  components: _Index2.default,
+  components: _Index2['default'],
   childRoutes: [{
     path: 'index.html',
-    components: _Example2.default
+    components: _Example2['default']
   }]
 };
 
-exports.default = [index];
+exports['default'] = [index];
 module.exports = exports['default'];

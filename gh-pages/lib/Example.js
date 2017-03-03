@@ -18,7 +18,7 @@ var _bbq = require('./bbq.jpg');
 
 var _bbq2 = _interopRequireDefault(_bbq);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -45,13 +45,13 @@ var Example = function (_Component) {
     value: function render() {
       var children = this.props.children;
 
-      return _react2.default.createElement(
+      return _react2['default'].createElement(
         'div',
         null,
-        _react2.default.createElement(
+        _react2['default'].createElement(
           'div',
-          { className: _client2.default.img },
-          _react2.default.createElement('img', { src: _bbq2.default, alt: 'bbq' })
+          { className: _client2['default'].img },
+          _react2['default'].createElement('img', { src: _bbq2['default'], alt: 'bbq' })
         ),
         children
       );
@@ -62,8 +62,8 @@ var Example = function (_Component) {
 }(_react.Component);
 
 Example.getInitialCssText = function () {
-  return _client2.default.toString();
+  return _client2['default'].toString();
 };
 
-exports.default = Example;
+exports['default'] = Example;
 module.exports = exports['default'];

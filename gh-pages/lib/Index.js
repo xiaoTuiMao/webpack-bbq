@@ -14,7 +14,7 @@ var _index = require('./index.css');
 
 var _index2 = _interopRequireDefault(_index);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -39,9 +39,9 @@ var Index = function (_Component) {
     value: function render() {
       var children = this.props.children;
 
-      return _react2.default.createElement(
+      return _react2['default'].createElement(
         'div',
-        { className: _index2.default.index },
+        { className: _index2['default'].index },
         children
       );
     }
@@ -54,5 +54,5 @@ Index.getInitialCssText = function () {
   return [require('./index.global.css'), require('./index.css')].toString();
 };
 
-exports.default = Index;
+exports['default'] = Index;
 module.exports = exports['default'];
