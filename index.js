@@ -37,6 +37,7 @@ if (debug) {
  * config.cssLoaderHashPrefix
  * config.postcss
  * config.staticRendering
+ * config.webpackDevServerUrl
  *
  * client
  * server
@@ -273,7 +274,9 @@ const bbq = (config) => {
 
         const devServerClient = require.resolve('webpack-dev-server/client');
         Object.keys(client.entry).forEach((key) => {
-          client.entry[key] = [].concat(client.entry[key]).concat(devServerClient);
+          client.entry[key] = []
+            .concat(client.entry[key])
+            .concat(devServerClient + (config.webpackDevServerUrl ? `?${config.webpackDevServerUrl}` : ''));
         });
 
         client.plugins.push(new webpack.HotModuleReplacementPlugin());
