@@ -122,11 +122,6 @@ const bbq = config => (client, server) => {
   const plugins = [
     new NamedStats(),
     new ExtractTextPlugin(cssfilename),
-    new webpack.optimize.CommonsChunkPlugin({
-      filename,
-      children: true,
-      minChunks: defined(client.minChunks, 3),
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
@@ -136,7 +131,6 @@ const bbq = config => (client, server) => {
   if (process.env.NODE_ENV === 'production') {
     const screw_ie8 = defined(client.screw_ie8, false); /* eslint camelcase:0 */
     plugins.push(new webpack.optimize.OccurrenceOrderPlugin(true));
-    plugins.push(new webpack.optimize.DedupePlugin());
     plugins.push(new UglifyJsPlugin({
       mangle: { screw_ie8 },
       compress: { warnings: false, screw_ie8 },
