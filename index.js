@@ -47,16 +47,19 @@ const bbq = (config) => {
   // 文件名在开发环境中没有 chunkhash, contenthash, hash
   // devtool 也不一样
   let filename;
+  let chunkfilename;
   let cssfilename;
   let bundlename;
   let devtool;
   if (debug) {
     filename = '[name].bundle.js';
+    chunkfilename = '[name].bundle.js';
     cssfilename = '[name].bundle.css';
     bundlename = '[path][name].[ext]';
     devtool = 'eval';
   } else {
-    filename = '[name]-[chunkhash].bundle.js';
+    filename = '[name]-[hash].bundle.js';
+    chunkfilename = '[name]-[chunkhash].bundle.js';
     cssfilename = '[name]-[contenthash].bundle.css';
     bundlename = '[path][name]-[hash].[ext]';
     devtool = 'source-map';
@@ -258,7 +261,7 @@ const bbq = (config) => {
       // output
       const output = xtend(client.output, {
         filename,
-        chunkFilename: filename,
+        chunkFilename: chunkfilename,
         path: config.outputdir,
         pathinfo: true,
         publicPath: defined(config.publicPath, config.rootdir),
