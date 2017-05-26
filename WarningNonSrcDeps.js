@@ -37,9 +37,10 @@ WaringNonSrcDeps.prototype.apply = function (compiler) {
         rel.indexOf('lib/') === 0 ||
         rel.indexOf('node_modules/') === 0
       );
-    });
+    })
+    .map(file => path.relative(basedir, file));
     if (nonSrcDeps.length > 0) {
-      console.warn('WarningNonSrcDeps (引入了未经过转化的源代码):', nonSrcDeps);
+      console.warn('WarningNonSrcDeps: %s 引入了未经过转化的源代码 %s', relpath, nonSrcDeps);
     }
   };
   compiler.plugin('compilation', (compilation) => {
