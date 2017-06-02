@@ -12,6 +12,7 @@ const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
+const WarningNonSrcDeps = require('./WarningNonSrcDeps');
 const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
@@ -216,6 +217,7 @@ const bbq = (config) => {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
         appRevisions,
+        new WarningNonSrcDeps({ basedir: config.basedir }),
       ];
 
       if (!debug) {
