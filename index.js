@@ -39,6 +39,7 @@ if (debug) {
  * config.postcss
  * config.staticRendering
  * config.webpackDevServerUrl
+ * config.appRevisionsPath
  *
  * client
  * server
@@ -180,7 +181,8 @@ const bbq = (config) => {
       throw new Error('context SHOULD NOT BE specified');
     }
 
-    const appRevisions = new ManifestGeneratorPlugin(`${config.basedir}/app-revisions.json`);
+    const appRevisionsPath = defined(config.appRevisionsPath, `${config.basedir}/app-revisions.json`);
+    const appRevisions = new ManifestGeneratorPlugin(appRevisionsPath);
     clients.forEach((client, index) => {
       /* eslint no-shadow:0 */
       // 添加 name

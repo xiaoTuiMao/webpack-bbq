@@ -1,4 +1,4 @@
-exports = module.exports = require("./../../node_modules/css-loader-bbq/lib/css-base.js")();
+exports = module.exports = require("../../node_modules/css-loader-bbq/lib/css-base.js")();
 // imports
 
 

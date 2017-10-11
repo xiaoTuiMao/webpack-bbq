@@ -18,6 +18,10 @@ WaringNonSrcDeps.prototype.apply = function (compiler) {
     if (relpath.indexOf('src/') !== 0) {
       return;
     }
+    const extname = path.extname(userRequest);
+    if (extname === '.json') {
+      return;
+    }
 
     const requestdir = path.dirname(userRequest);
     let deps = module.dependencies;
@@ -35,7 +39,8 @@ WaringNonSrcDeps.prototype.apply = function (compiler) {
       return !(
         rel.indexOf('src/') === 0 ||
         rel.indexOf('lib/') === 0 ||
-        rel.indexOf('node_modules/') === 0
+        rel.indexOf('node_modules/') === 0 ||
+        rel.indexOf('/node_modules/') !== -1
       );
     })
     .map(file => path.relative(basedir, file));
