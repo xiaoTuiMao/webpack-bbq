@@ -386,19 +386,22 @@ StaticRendering.prototype.get = function get(srcfile, basedir) {
 };
 StaticRendering.prototype.apply = function apply(compiler) {
   const config = this.config;
-  const staticRendering = this.config.staticRendering;
-  let uris;
-  if (Array.isArray(staticRendering)) {
-    uris = staticRendering;
-  } else {
-    uris = staticRendering.uris;
-  }
+  const staticRendering = config.staticRendering;
   /* eslint max-len:0 */
   const entry = defined(staticRendering.app, this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir));
 
   compiler.plugin('after-compile', (compilation, callback) => {
     if (debug) {
       clearRequireCache(entry);
+    }
+    let uris;
+    if (Array.isArray(staticRendering)) {
+      uris = staticRendering;
+    } else {
+      uris = staticRendering.uris;
+    }
+    if (typeof uris === 'function') {
+      uris = uris();
     }
     if (!Array.isArray(uris)) {
       callback(new Error('staticRendering.uris MUST BE an Array'));
