@@ -388,11 +388,12 @@ StaticRendering.prototype.apply = function apply(compiler) {
   const config = this.config;
   const staticRendering = config.staticRendering;
   /* eslint max-len:0 */
-  const entry = defined(staticRendering.app, this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir));
+  const entryserver = this.get(this.server.entry[Object.keys(this.server.entry)[0]], config.basedir);
+  const entry = defined(staticRendering.app, entryserver);
 
   compiler.plugin('after-compile', (compilation, callback) => {
     if (debug) {
-      clearRequireCache(entry);
+      clearRequireCache(entryserver);
     }
     let uris;
     if (Array.isArray(staticRendering)) {
