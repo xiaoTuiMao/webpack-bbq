@@ -108,6 +108,11 @@ const bbq = (config) => {
     babelquery = qs.stringify(babelquery, null, null, {
       encodeURIComponent: s => (s),
     });
+    const ts = {
+      test: /\.tsx?$/,
+      include: `${config.basedir}/src/`,
+      loader: 'ts-loader',
+    };
     const js = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
@@ -168,7 +173,7 @@ const bbq = (config) => {
       loader: 'json-loader',
     };
 
-    return [js, json, externalCss, globalCss, style, font, images, av];
+    return [ts, js, json, externalCss, globalCss, style, font, images, av];
   };
 
   return function (/* client, client, client, ..., server */) {
@@ -183,6 +188,7 @@ const bbq = (config) => {
 
     const appRevisionsPath = defined(config.appRevisionsPath, `${config.basedir}/app-revisions.json`);
     const appRevisions = new ManifestGeneratorPlugin(appRevisionsPath);
+    const resolveExtensions = ['.js', '.ts', '.tsx', '.json'];
     clients.forEach((client, index) => {
       /* eslint no-shadow:0 */
       // 添加 name
@@ -211,6 +217,11 @@ const bbq = (config) => {
       // client only
       client.devtool = defined(client.devtool, devtool);
 
+      // resolve
+      client.resolve = xtend({
+        extensions: resolveExtensions,
+      }, client.resolve);
+
       // plugins
       const plugins = [
         new NamedStats(),
@@ -219,8 +230,9 @@ const bbq = (config) => {
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),
         appRevisions,
-        new WarningNonSrcDeps({ basedir: config.basedir }),
+        new WarningNonSrcDeps({ basedir: config.basedir, resolveExtensions: client.resolve.extensions }),
       ];
+      
 
       if (!debug) {
         /* eslint camelcase:0 */
@@ -331,6 +343,11 @@ const bbq = (config) => {
         .concat(server.module && server.module.rules, { loader: libify, enforce: 'post' })
         .filter(v => v),
     });
+
+    // server resolve
+    server.resolve = xtend({
+      extensions: resolveExtensions,
+    }, server.resolve);
 
     // configuration - plugins
     // server only
