@@ -98,7 +98,7 @@ const bbq = (config) => {
         'transform-async-to-generator',
         'transform-es3-member-expression-literals',
         'babel-plugin-transform-es3-property-literals',
-      ].concat(config.babelPlugins || []),
+      ],
       cacheDirectory: true,
       babelrc: false,
     };
