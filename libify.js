@@ -23,19 +23,19 @@ function get(file, basedir) {
   return libfile;
 }
 
-function replacement(resourcePath, content, basedir, options) {
+function replacement(filepath, content, basedir, options) {
   if (content.indexOf('__webpack_public_path__') === -1) {
     return content;
   }
   jsTokens.lastIndex = 0;
   const parts = content.match(jsTokens);
   const webpackConfigPath = path.relative(
-    path.dirname(resourcePath),
+    path.dirname(filepath),
     options.webpackConfigPath || path.join(basedir, 'webpack.config'),
   );
   const publicPath = 'require(' + JSON.stringify(webpackConfigPath) + ')[0].output.publicPath';
   const appRevisionsPath = path.relative(
-    path.dirname(resourcePath),
+    path.dirname(filepath),
     options.appRevisionsPath || path.join(basedir, 'app-revisions.json'),
   );
   // string val is module
@@ -83,7 +83,7 @@ module.exports = function libify(content) {
     }
 
     mkdirp.sync(path.dirname(filepath));
-    fs.writeFileSync(filepath, replacement(this.resourcePath, content, basedir, options));
+    fs.writeFileSync(filepath, replacement(filepath, content, basedir, options));
     return content;
   }
 
@@ -105,7 +105,7 @@ module.exports = function libify(content) {
       callback(err);
       return;
     }
-    content = replacement(this.resourcePath, content, basedir, options);
+    content = replacement(filepath, content, basedir, options);
     fs.writeFile(filepath, content, fserr => callback(fserr, content));
   });
 };
