@@ -11,12 +11,12 @@ const map = require('map-async');
 const resolve = require('resolve');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ManifestGeneratorPlugin = require('webpack-bbq-manifest-generator');
+const AppRevisionsGenerator = require('./AppRevisionsGenerator');
 const WarningNonSrcDeps = require('./WarningNonSrcDeps');
 const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
-const libify = require.resolve('webpack-libify');
+const libify = require.resolve('./libify');
 // 开发环境标识
 const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 
@@ -39,31 +39,35 @@ if (debug) {
  * config.postcss
  * config.staticRendering
  * config.webpackDevServerUrl
+ * config.webpackConfigPath
  * config.appRevisionsPath
  *
  * client
  * server
  */
 const bbq = (config) => {
-  // 文件名需要有 .bundle
   // 文件名在开发环境中没有 chunkhash, contenthash, hash
   // devtool 也不一样
   let filename;
   let chunkfilename;
   let cssfilename;
   let bundlename;
+  let serverbundlename;
   let devtool;
   if (debug) {
-    filename = '[name].bundle.js';
-    chunkfilename = '[name].bundle.js';
-    cssfilename = '[name].bundle.css';
+    filename = '[name].js';
+    chunkfilename = '[name].js';
+    cssfilename = '[name].css';
     bundlename = '[path][name].[ext]';
+    serverbundlename = '[path][name].[ext]';
     devtool = 'eval';
   } else {
-    filename = '[name]-[hash].bundle.js';
-    chunkfilename = '[name]-[chunkhash].bundle.js';
-    cssfilename = '[name]-[contenthash].bundle.css';
+    // AppRevisionsGenerator 会使用 - . 来获取 key
+    filename = '[name]-[hash].js';
+    chunkfilename = '[name]-[chunkhash].js';
+    cssfilename = '[name]-[contenthash].css';
     bundlename = '[path][name]-[hash].[ext]';
+    serverbundlename = '[path][name].[ext]';
     devtool = 'source-map';
   }
 
@@ -76,18 +80,19 @@ const bbq = (config) => {
   // get loaders for specified target
   // supported targets: web, node
   const getLoaders = (target) => {
-    const font = {
+    const fileLoader = {
+      loader: 'file-loader',
+      options: { name: target === 'node' ? serverbundlename : bundlename, emitFile: true },
+    };
+    const font = xtend(fileLoader, {
       test: /\.(woff|ttf|woff2|eot)(\?.*)?$/,
-      loader: `file-loader?name=${bundlename}`,
-    };
-    const images = {
+    });
+    const images = xtend(fileLoader, {
       test: /\.(ico|jpg|jpeg|png|gif|webp|svg)(\?.*)?$/,
-      loader: `file-loader?name=${bundlename}`,
-    };
-    const av = {
+    });
+    const av = xtend(fileLoader, {
       test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-      loader: `url-loader?name=${bundlename}&limit=10000`,
-    };
+    });
 
     let babelquery = {
       'presets[]': ['react', 'es2015'],
@@ -187,7 +192,7 @@ const bbq = (config) => {
     }
 
     const appRevisionsPath = defined(config.appRevisionsPath, `${config.basedir}/app-revisions.json`);
-    const appRevisions = new ManifestGeneratorPlugin(appRevisionsPath);
+    const appRevisions = new AppRevisionsGenerator(appRevisionsPath);
     const resolveExtensions = ['.js', '.ts', '.tsx', '.json'];
     clients.forEach((client, index) => {
       /* eslint no-shadow:0 */
@@ -232,7 +237,7 @@ const bbq = (config) => {
         appRevisions,
         new WarningNonSrcDeps({ basedir: config.basedir, resolveExtensions: client.resolve.extensions }),
       ];
-      
+
 
       if (!debug) {
         /* eslint camelcase:0 */
@@ -340,7 +345,14 @@ const bbq = (config) => {
     // server only
     server.module = xtend(server.module, {
       rules: getLoaders('node')
-        .concat(server.module && server.module.rules, { loader: libify, enforce: 'post' })
+        .concat(server.module && server.module.rules, {
+          loader: libify,
+          enforce: 'post',
+          options: {
+            webpackConfigPath: config.webpackConfigPath,
+            appRevisionsPath: config.appRevisionsPath,
+          },
+        })
         .filter(v => v),
     });
 
@@ -355,6 +367,7 @@ const bbq = (config) => {
       new ShouldNotEmit(),
       new NamedStats(),
       new webpack.IgnorePlugin(/webpack\.config/),
+      new webpack.IgnorePlugin(/app-revisions\.json/),
     ];
     if (config.staticRendering) {
       serverPlugins.push(new StaticRendering(config, server));

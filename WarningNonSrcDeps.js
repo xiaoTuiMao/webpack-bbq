@@ -24,7 +24,10 @@ WaringNonSrcDeps.prototype.apply = function (compiler) {
     let deps = module.dependencies;
     deps = deps.filter(item => item.constructor.name === 'CommonJsRequireDependency' && item.userRequest);
     deps = deps.map(item => item.userRequest.split('!').pop());
-    deps = deps.map(depfile => resolve.sync(depfile, { basedir: requestdir, extensions: resolveExtensions }));
+    deps = deps.map(depfile => resolve.sync(depfile, {
+      basedir: requestdir,
+      extensions: resolveExtensions,
+    }));
     deps = deps.filter(item => item.charAt(0) === '/');
     if (deps.length === 0) {
       return;
