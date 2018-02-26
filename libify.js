@@ -31,12 +31,12 @@ function replacement(filepath, content, basedir, options) {
   const parts = content.match(jsTokens);
   const webpackConfigPath = path.relative(
     path.dirname(filepath),
-    options.webpackConfigPath || path.join(basedir, 'webpack.config')
+    options.webpackConfigPath || path.join(basedir, 'webpack.config'),
   );
   const publicPath = 'require(' + JSON.stringify(webpackConfigPath) + ')[0].output.publicPath';
   const appRevisionsPath = path.relative(
     path.dirname(filepath),
-    options.appRevisionsPath || path.join(basedir, 'app-revisions.json')
+    options.appRevisionsPath || path.join(basedir, 'app-revisions.json'),
   );
   // string val is module
   // string val is .
