@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _toString = require('ramda/src/toString');
+
+var _toString2 = _interopRequireDefault(_toString);
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -62,7 +66,7 @@ var Example = function (_Component) {
 }(_react.Component);
 
 Example.getInitialCssText = function () {
-  return _client2['default'].toString();
+  return (0, _toString2['default'])(_client2['default']);
 };
 
 exports['default'] = Example;

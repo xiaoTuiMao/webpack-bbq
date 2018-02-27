@@ -2,6 +2,7 @@
 /* eslint react/prefer-stateless-function:0 */
 /* eslint react/prop-types:0 */
 import React, { Component } from 'react';
+import * as R from 'ramda';
 
 import styles from './client.css';
 // https://commons.wikimedia.org/wiki/File:Bbq.jpg
@@ -21,7 +22,7 @@ class Example extends Component {
   }
 }
 
-Example.getInitialCssText = () => styles.toString();
+Example.getInitialCssText = () => R.toString(styles);
 
 export default Example;
 

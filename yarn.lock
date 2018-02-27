@@ -4560,7 +4560,7 @@ querystringify@~1.0.0:
   version "1.0.0"
   resolved "http://r.npm.sankuai.com/querystringify/download/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
 
-ramda@0.x:
+ramda@0.x, ramda@^0.25.0:
   version "0.25.0"
   resolved "http://r.npm.sankuai.com/ramda/download/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
 
