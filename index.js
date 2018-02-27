@@ -103,7 +103,7 @@ const bbq = (config) => {
         'transform-async-to-generator',
         'transform-es3-member-expression-literals',
         'babel-plugin-transform-es3-property-literals',
-        'ramda',
+        'babel-plugin-ramda',
       ],
       cacheDirectory: true,
       babelrc: false,
