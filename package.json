@@ -55,6 +55,7 @@
     "babel-core": "^6.23.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-ramda": "^1.4.3",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-plugin-transform-ensure-ignore": "^0.1.0",
