@@ -3,6 +3,7 @@
 /* eslint react/prop-types:0 */
 import React, { Component } from 'react';
 import * as R from 'ramda';
+import babelRamda from './babelRamda';
 
 import styles from './client.css';
 // https://commons.wikimedia.org/wiki/File:Bbq.jpg
@@ -16,6 +17,7 @@ class Example extends Component {
         <div className={styles.img}>
           <img src={bbq} alt="bbq" />
         </div>
+        <div>{babelRamda}</div>
         {children}
       </div>
     );

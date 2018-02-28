@@ -14,6 +14,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _babelRamda = require('./babelRamda');
+
+var _babelRamda2 = _interopRequireDefault(_babelRamda);
+
 var _client = require('./client.css');
 
 var _client2 = _interopRequireDefault(_client);
@@ -56,6 +60,11 @@ var Example = function (_Component) {
           'div',
           { className: _client2['default'].img },
           _react2['default'].createElement('img', { src: _bbq2['default'], alt: 'bbq' })
+        ),
+        _react2['default'].createElement(
+          'div',
+          null,
+          _babelRamda2['default']
         ),
         children
       );
