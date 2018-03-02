@@ -1,7 +1,8 @@
+/* eslint no-use-before-define: 0, no-shadow: 0 */
 import { add, multiply } from 'ramda';
 
 function innerAdd(a, b) {
-  var result = add(a, b);
+  const result = add(a, b);
   function add(c, d) {
     return c + d;
   }
