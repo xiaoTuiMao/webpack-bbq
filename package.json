@@ -43,13 +43,13 @@
     "send-data": "^8.0.0",
     "st": "^1.2.0",
     "tape": "^4.6.3",
-    "webpack": "^3.7.0",
-    "webpack-dev-server": "^2.3",
+    "webpack": "^3.7.1",
+    "webpack-dev-server": "^2.7.1",
     "xhr-request": "^1.0.1"
   },
   "peerDependencies": {
-    "webpack": "^3.7.0",
-    "webpack-dev-server": "^2.3"
+    "webpack": "^3.7.1",
+    "webpack-dev-server": "^2.7.1"
   },
   "dependencies": {
     "autoprefixer": "^6.7.3",
