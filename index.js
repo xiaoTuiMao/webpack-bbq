@@ -295,7 +295,7 @@ const bbq = (config) => {
 
       if (debug) {
         // configuration - recordsPath
-        /* client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`;*/
+        /* client.recordsPath = `${config.basedir}/.webpack-hmr-records.json`; */
 
         const devServerClient = require.resolve('webpack-dev-server/client');
         Object.keys(client.entry).forEach((key) => {
@@ -304,7 +304,7 @@ const bbq = (config) => {
             .concat(devServerClient + (config.webpackDevServerUrl ? `?${config.webpackDevServerUrl}` : ''));
         });
 
-        /* client.plugins.push(new webpack.HotModuleReplacementPlugin());*/
+        /* client.plugins.push(new webpack.HotModuleReplacementPlugin()); */
       }
     });
 
