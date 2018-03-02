@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 
   const config = require('../config');
   const webpackConfig = require('../webpack.config');
+  const once = require('lodash/once');
 
   /* eslint object-property-newline:0 */
   const statsOptions = {
@@ -31,14 +32,12 @@ if (process.env.NODE_ENV === 'production') {
       console.info(stats.toString(statsOptions));
     }
   };
-  const runAndwatch = (cb) => {
-    let firstRun = true;
+
+  const runAndwatch = cb => {
+    const onceCb = once(cb);
     return (err, stats) => {
       onStats(err, stats);
-      if (firstRun) {
-        cb();
-        firstRun = false;
-      }
+      onceCb();
     };
   };
 
