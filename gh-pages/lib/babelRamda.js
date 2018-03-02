@@ -20,7 +20,8 @@ function innerAdd(a, b) {
     return c + d;
   }
   return result;
-}
+} /* eslint no-use-before-define: 0, no-shadow: 0 */
+
 
 var outerAdd = _add2['default'];
 

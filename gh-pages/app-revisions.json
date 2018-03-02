@@ -1,6 +1,6 @@
 {
-  "render.js": "render-32dfb176441021f6139d.js",
-  "client.js": "client-346d0371e6883fc84eb4.js",
-  "client.css": "client-278c01edbf283478390605df69f96146.css",
-  "src/bbq.jpg": "src/bbq-dcb179fd926ad67e97ef7f62e3ba9108.jpg"
+  "render.js": "render.js",
+  "client.js": "client.js",
+  "client.css": "client.css",
+  "src/bbq.jpg": "src/bbq.jpg"
 }
