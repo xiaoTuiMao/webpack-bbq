@@ -17,6 +17,8 @@ const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
 const libify = require.resolve('./libify');
+const TimeFixPlugin = require('./TimeFixPlugin');
+
 // 开发环境标识
 const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'development';
 
@@ -237,6 +239,7 @@ const bbq = (config) => {
         }),
         appRevisions,
         new WarningNonSrcDeps({ basedir: config.basedir, resolveExtensions: client.resolve.extensions }),
+        new TimeFixPlugin(),
       ];
 
 
