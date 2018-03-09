@@ -1,4 +1,5 @@
 /* eslint no-param-reassign: 0 */
+// https://github.com/webpack/watchpack/issues/25#issuecomment-319292564
 module.exports = class TimeFixPlugin {
   constructor(timefix = 11000) {
     this.timefix = timefix;
