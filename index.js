@@ -238,8 +238,12 @@ const bbq = (config) => {
         plugins.push(new webpack.optimize.UglifyJsPlugin({
           sourceMap: true,
           mangle: {},
-          compress: { warnings: false },
+          compress: {
+            warnings: false,
+            properties: false,
+          },
           output: {},
+          comments: false,
         }));
       } else {
         plugins.push(new TimeFixPlugin());
