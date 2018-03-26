@@ -87,7 +87,7 @@ const bbq = (config) => {
     });
 
     const babelLoaderOptions = {
-      presets: ['react', ['es2015', { modules: target === 'web' ? false : 'commmonjs' }]],
+      presets: ['react', ['es2015', { modules: target === 'web' ? false : 'commonjs' }]],
       plugins: [
         'transform-object-rest-spread',
         'transform-class-properties',
