@@ -102,7 +102,7 @@ const bbq = (config) => {
     if (target === 'node') {
       babelLoaderOptions.plugins.push(
         'add-module-exports',
-        'transform-ensure-ignore',
+        'transform-ensure-ignore'
       );
     }
     const ts = {
