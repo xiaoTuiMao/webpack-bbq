@@ -2,7 +2,6 @@
 
 'use strict';
 
-const qs = require('querystring');
 const path = require('path');
 
 const defined = require('defined');
@@ -87,11 +86,10 @@ const bbq = (config) => {
       test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
     });
 
-    let babelquery = {
-      'presets[]': ['react', 'es2015'],
-      'plugins[]': [
+    const babelLoaderOptions = {
+      presets: ['react', ['es2015', { modules: target === 'web' ? false : 'commmonjs' }]],
+      plugins: [
         'transform-object-rest-spread',
-        'add-module-exports',
         'transform-class-properties',
         'transform-async-to-generator',
         'transform-es3-member-expression-literals',
@@ -102,11 +100,11 @@ const bbq = (config) => {
       babelrc: false,
     };
     if (target === 'node') {
-      babelquery['plugins[]'].push('transform-ensure-ignore');
+      babelLoaderOptions.plugins.push(
+        'add-module-exports',
+        'transform-ensure-ignore',
+      );
     }
-    babelquery = qs.stringify(babelquery, null, null, {
-      encodeURIComponent: s => (s),
-    });
     const ts = {
       test: /\.tsx?$/,
       include: `${config.basedir}/src/`,
@@ -115,7 +113,8 @@ const bbq = (config) => {
     const js = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loader: `babel-loader?${babelquery}`,
+      loader: 'babel-loader',
+      options: babelLoaderOptions,
     };
 
     const styleLoaderName = 'style-loader';
@@ -230,6 +229,7 @@ const bbq = (config) => {
         }),
         appRevisions,
         new WarningNonSrcDeps({ basedir: config.basedir, resolveExtensions: client.resolve.extensions }),
+        new webpack.optimize.ModuleConcatenationPlugin(),
       ];
 
 

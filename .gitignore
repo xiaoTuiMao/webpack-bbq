@@ -34,3 +34,6 @@ node_modules
 
 .webpack-hmr-records.json
 *.hot-update.js
+
+# Webstorm 
+.idea
