@@ -229,22 +229,24 @@ const bbq = (config) => {
         }),
         appRevisions,
         new WarningNonSrcDeps({ basedir: config.basedir, resolveExtensions: client.resolve.extensions }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
       ];
 
 
       if (!debug) {
         /* eslint camelcase:0 */
-        plugins.push(new webpack.optimize.UglifyJsPlugin({
-          sourceMap: true,
-          mangle: {},
-          compress: {
-            warnings: false,
-            properties: false,
-          },
-          output: {},
-          comments: false,
-        }));
+        plugins.push(
+          new webpack.optimize.ModuleConcatenationPlugin(),
+          new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            mangle: {},
+            compress: {
+              warnings: false,
+              properties: false,
+            },
+            output: {},
+            comments: false,
+          })
+        );
       } else {
         plugins.push(new TimeFixPlugin());
       }
