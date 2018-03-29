@@ -235,7 +235,7 @@ const bbq = (config) => {
       if (!debug) {
         /* eslint camelcase:0 */
         plugins.push(
-          // new webpack.optimize.ModuleConcatenationPlugin(),
+          new webpack.optimize.ModuleConcatenationPlugin(),
           new webpack.optimize.UglifyJsPlugin({
             sourceMap: true,
             mangle: {},
