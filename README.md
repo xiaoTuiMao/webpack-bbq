@@ -26,7 +26,7 @@ Show Your Webpack Loader Transformed Source!
 
 ```js
 // in your webpack.config.js
-const libify = require.resolve('webpack-libify');
+const libify = require.resolve('webpack-bbq/libify');
 
 module.rules: [ { loader: libify, enforce: 'post', options: { webpackConfigPath } } ]
 ```
