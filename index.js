@@ -2,6 +2,7 @@
 
 'use strict';
 
+const qs = require('querystring');
 const path = require('path');
 
 const defined = require('defined');
@@ -86,10 +87,11 @@ const bbq = (config) => {
       test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
     });
 
-    const babelLoaderOptions = {
-      presets: ['react', ['es2015', { modules: target === 'web' ? false : 'commonjs' }]],
-      plugins: [
+    let babelquery = {
+      'presets[]': ['react', 'es2015'],
+      'plugins[]': [
         'transform-object-rest-spread',
+        'add-module-exports',
         'transform-class-properties',
         'transform-async-to-generator',
         'transform-es3-member-expression-literals',
@@ -100,11 +102,11 @@ const bbq = (config) => {
       babelrc: false,
     };
     if (target === 'node') {
-      babelLoaderOptions.plugins.push(
-        'add-module-exports',
-        'transform-ensure-ignore'
-      );
+      babelquery['plugins[]'].push('transform-ensure-ignore');
     }
+    babelquery = qs.stringify(babelquery, null, null, {
+      encodeURIComponent: s => (s),
+    });
     const ts = {
       test: /\.tsx?$/,
       include: `${config.basedir}/src/`,
@@ -113,8 +115,7 @@ const bbq = (config) => {
     const js = {
       test: /\.js$/,
       include: `${config.basedir}/src/`,
-      loader: 'babel-loader',
-      options: babelLoaderOptions,
+      loader: `babel-loader?${babelquery}`,
     };
 
     const styleLoaderName = 'style-loader';
@@ -234,19 +235,16 @@ const bbq = (config) => {
 
       if (!debug) {
         /* eslint camelcase:0 */
-        plugins.push(
-          new webpack.optimize.ModuleConcatenationPlugin(),
-          new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            mangle: {},
-            compress: {
-              warnings: false,
-              properties: false,
-            },
-            output: {},
-            comments: false,
-          })
-        );
+        plugins.push(new webpack.optimize.UglifyJsPlugin({
+          sourceMap: true,
+          mangle: {},
+          compress: {
+            warnings: false,
+            properties: false,
+          },
+          output: {},
+          comments: false,
+        }));
       } else {
         plugins.push(new TimeFixPlugin());
       }
