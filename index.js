@@ -56,7 +56,7 @@ const bbq = (config) => {
     devtool = 'eval';
   } else {
     // AppRevisionsGenerator 会使用 - . 来获取 key
-    filename = '[name]-[hash].js';
+    filename = '[name]-[chunkhash].js';
     chunkfilename = '[name]-[chunkhash].js';
     cssfilename = '[name]-[contenthash].css';
     bundlename = '[path][name]-[hash].[ext]';
