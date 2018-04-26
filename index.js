@@ -16,6 +16,7 @@ const clearRequireCache = require('clear-require-cache');
 const autoprefixer = require('autoprefixer');
 
 const libify = require.resolve('./libify');
+const emitESLib = require.resolve('./emitESLib');
 const TimeFixPlugin = require('./TimeFixPlugin');
 
 // 开发环境标识
@@ -33,6 +34,7 @@ const debug = process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'de
  * config.webpackDevServerUrl
  * config.webpackConfigPath
  * config.appRevisionsPath
+ * config.genESLib
  *
  * client
  * server
@@ -70,7 +72,7 @@ const bbq = (config) => {
   };
 
   // get loaders for specified target
-  // supported targets: web, node
+  // supported targets: web, node, esLib
   const getLoaders = (target) => {
     const fileLoader = {
       loader: 'file-loader',
@@ -87,7 +89,7 @@ const bbq = (config) => {
     });
 
     const babelLoaderOptions = {
-      presets: ['react', ['es2015', { modules: target === 'web' ? false : 'commonjs' }]],
+      presets: ['react', ['es2015', { modules: target !== 'node' ? false : 'commonjs' }]],
       plugins: [
         'transform-object-rest-spread',
         'transform-class-properties',
@@ -153,12 +155,12 @@ const bbq = (config) => {
       test: /\.css$/,
       include: `${config.basedir}/src/`,
       exclude: filepath => globalCssRe.test(path.basename(filepath)),
-      use: target === 'web' ? [
-        styleLoaderName,
-        `${cssLoaderName}?${styleQuery}`,
+      use: target !== 'web' ? [
+        `${cssLoaderName}/locals?${styleQuery}&cssText`,
         postcssLoader,
       ] : [
-        `${cssLoaderName}/locals?${styleQuery}&cssText`,
+        styleLoaderName,
+        `${cssLoaderName}?${styleQuery}`,
         postcssLoader,
       ],
     };
@@ -337,6 +339,37 @@ const bbq = (config) => {
       path: `${config.outputdir}/SHOULD_NOT_EXISTS_DIRECTORY`,
     });
 
+    // server resolve
+    server.resolve = xtend({
+      extensions: resolveExtensions,
+    }, server.resolve);
+
+    // configuration - plugins
+    // server only
+    const serverPlugins = [
+      new ShouldNotEmit(),
+      new NamedStats(),
+      new webpack.IgnorePlugin(/webpack\.config/),
+      new webpack.IgnorePlugin(/app-revisions\.json/),
+    ];
+
+    let esLib;
+    if (config.genESLib) {
+      esLib = xtend(server, {
+        entry: path.join(config.basedir, config.genESLib),
+        plugins: serverPlugins.slice(),
+      });
+      esLib.module = xtend(esLib.module, {
+        rules: getLoaders('esLib')
+          .concat(esLib.module && esLib.module.rules, {
+            loader: emitESLib,
+            enforce: 'post',
+            include: `${config.basedir}/src/`,
+          })
+          .filter(v => v),
+      });
+    }
+
     // configuration - module
     // server only
     server.module = xtend(server.module, {
@@ -352,25 +385,12 @@ const bbq = (config) => {
         .filter(v => v),
     });
 
-    // server resolve
-    server.resolve = xtend({
-      extensions: resolveExtensions,
-    }, server.resolve);
-
-    // configuration - plugins
-    // server only
-    const serverPlugins = [
-      new ShouldNotEmit(),
-      new NamedStats(),
-      new webpack.IgnorePlugin(/webpack\.config/),
-      new webpack.IgnorePlugin(/app-revisions\.json/),
-    ];
     if (config.staticRendering) {
       serverPlugins.push(new StaticRendering(config, server));
     }
     server.plugins = serverPlugins.concat(server.plugins).filter(v => v);
 
-    return clients.concat(server);
+    return clients.concat(server, esLib).filter(v => v);
   };
 };
 
