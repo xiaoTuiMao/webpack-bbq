@@ -311,6 +311,7 @@ const bbq = (config) => {
     // server land
     server.name = 'server';
 
+    server.devtool = defined(server.devtool, devtool);
     // configuration - context
     // shared
     server.context = config.basedir;

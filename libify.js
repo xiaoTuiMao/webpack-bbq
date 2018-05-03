@@ -71,8 +71,9 @@ module.exports = function libify(code, map) {
   const options = getOptions(this);
   let filepath;
   let content;
+  filepath = get(this.resourcePath, basedir);
   // 在测试的时候生成的Lib文件带有source map 方便在测试的时候，测试的lib文件中找到对应的源文件
-  if (map && process.env.NODE_ENV === 'test') {
+  if (map && process.env.NODE_ENV === 'test' && filepath.indexOf('.test.js') === -1) {
     const sourceMap = Buffer.from(JSON.stringify(map)).toString('base64');
     content = `${code}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,${sourceMap}`;
   } else {
@@ -84,7 +85,6 @@ module.exports = function libify(code, map) {
       return content;
     }
 
-    filepath = get(this.resourcePath, basedir);
 
     if (filepath === this.resourcePath || filepath === this.resourcePath + '.js') {
       return content;
