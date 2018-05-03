@@ -63,13 +63,21 @@ function replacement(filepath, content, basedir, options) {
   return out;
 }
 
-module.exports = function libify(content) {
+module.exports = function libify(code, map) {
   /* eslint consistent-return:0 */
   this.cacheable();
   const callback = this.async();
   const basedir = this.options.context;
   const options = getOptions(this);
   let filepath;
+  let content;
+  // 在测试的时候生成的Lib文件带有source map 方便在测试的时候，测试的lib文件中找到对应的源文件
+  if (map && process.env.NODE_ENV === 'test') {
+    const sourceMap = Buffer.from(JSON.stringify(map)).toString('base64');
+    content = `${code}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,${sourceMap}`;
+  } else {
+    content = code;
+  }
 
   if (!callback) {
     if (this.resourcePath.split(path.sep).indexOf('node_modules') !== -1) {
