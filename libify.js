@@ -34,10 +34,6 @@ function replacement(filepath, content, basedir, options) {
     options.webpackConfigPath || path.join(basedir, 'webpack.config')
   );
   const publicPath = 'require(' + JSON.stringify(webpackConfigPath) + ')[0].output.publicPath';
-  const appRevisionsPath = path.relative(
-    path.dirname(filepath),
-    options.appRevisionsPath || path.join(basedir, 'app-revisions.json')
-  );
   // string val is module
   // string val is .
   // string val is exports
@@ -69,8 +65,8 @@ module.exports = function libify(code, map) {
   let filepath;
   let content;
   filepath = get(this.resourcePath, basedir);
-  // 在测试的时候生成的Lib文件带有source map 方便在测试的时候，测试的lib文件中找到对应的源文件 测试文件是不需要加source map的
-  if (map && process.env.NODE_ENV === 'test' && filepath.indexOf('.test.js') === -1) {
+  // 在测试的时候生成的 lib 文件带有 source map 方便在测试的时候，测试的 lib 文件中找到对应的源文件 测试文件是不需要加 source map 的
+  if (map && process.env.NODE_ENV === 'test' && (!/.test.js$/.test(filepath) || !/__test__/.test(filepath))) {
     const sourceMap = Buffer.from(JSON.stringify(map)).toString('base64');
     content = `${code}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,${sourceMap}`;
   } else {
