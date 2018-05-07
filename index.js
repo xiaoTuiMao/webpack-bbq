@@ -57,7 +57,7 @@ const bbq = (config) => {
     filename = '[name]-[chunkhash].js';
     chunkfilename = '[name]-[chunkhash].js';
     cssfilename = '[name]-[contenthash].css';
-    bundlename = '[path][name]-[chunkhash].[ext]';
+    bundlename = '[path][name]-[hash].[ext]';
     devtool = 'source-map';
   }
 
