@@ -348,7 +348,6 @@ const bbq = (config) => {
           enforce: 'post',
           options: {
             webpackConfigPath: config.webpackConfigPath,
-            appRevisionsPath: config.appRevisionsPath,
           },
         })
         .filter(v => v),
