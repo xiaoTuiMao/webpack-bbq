@@ -54,9 +54,6 @@ function replacement(filepath, content, basedir, options) {
     if (val === '__webpack_public_path__') {
       return publicPath;
     }
-    if (val.charAt(0) === '"' && val.charAt(val.length - 1) === '"') {
-      return 'require(' + JSON.stringify(appRevisionsPath) + ')[' + val + ']';
-    }
     return val;
   })
   .join('');
@@ -72,7 +69,7 @@ module.exports = function libify(code, map) {
   let filepath;
   let content;
   filepath = get(this.resourcePath, basedir);
-  // 在测试的时候生成的Lib文件带有source map 方便在测试的时候，测试的lib文件中找到对应的源文件
+  // 在测试的时候生成的Lib文件带有source map 方便在测试的时候，测试的lib文件中找到对应的源文件 测试文件是不需要加source map的
   if (map && process.env.NODE_ENV === 'test' && filepath.indexOf('.test.js') === -1) {
     const sourceMap = Buffer.from(JSON.stringify(map)).toString('base64');
     content = `${code}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,${sourceMap}`;

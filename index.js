@@ -45,22 +45,19 @@ const bbq = (config) => {
   let chunkfilename;
   let cssfilename;
   let bundlename;
-  let serverbundlename;
   let devtool;
   if (debug) {
     filename = '[name].js';
     chunkfilename = '[name].js';
     cssfilename = '[name].css';
     bundlename = '[path][name].[ext]';
-    serverbundlename = '[path][name].[ext]';
     devtool = 'eval';
   } else {
     // AppRevisionsGenerator 会使用 - . 来获取 key
     filename = '[name]-[chunkhash].js';
     chunkfilename = '[name]-[chunkhash].js';
     cssfilename = '[name]-[contenthash].css';
-    bundlename = '[path][name]-[hash].[ext]';
-    serverbundlename = '[path][name].[ext]';
+    bundlename = '[path][name]-[chunkhash].[ext]';
     devtool = 'source-map';
   }
 
@@ -75,7 +72,7 @@ const bbq = (config) => {
   const getLoaders = (target) => {
     const fileLoader = {
       loader: 'file-loader',
-      options: { name: target === 'node' ? serverbundlename : bundlename, emitFile: true },
+      options: { name: bundlename, emitFile: true },
     };
     const font = xtend(fileLoader, {
       test: /\.(woff|ttf|woff2|eot)(\?.*)?$/,
